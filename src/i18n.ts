@@ -5,14 +5,14 @@ const resources = {
   en: {
     translation: {
       hero: {
-        badge: "AI Website Builder",
-        title1: "Build Stunning",
-        title2: "Websites with",
-        title3: "AI in Seconds.",
-        subheading: "Describe your idea and our AI will design, write,\nand launch your website instantly.",
-        cta_primary: "Start Building — It's Free",
-        watch_demo: "Watch Demo",
-        trusted: "Trusted by innovative teams",
+        badge: "Launch websites from a single prompt",
+        title1: "Describe It.",
+        title2: "Build It.",
+        title3: "Ship It.",
+        subheading: "From a single prompt to a live website. ZORVIQ writes the code, generates the content, and deploys — in seconds.",
+        cta_primary: "Start Building Free",
+        watch_demo: "See it in action",
+        trusted: "Trusted by modern builders",
         editor: "zorviq.ai/editor",
         ready: "Your website is ready!",
         design_that: "Design that",
@@ -34,9 +34,7 @@ i18n
     resources,
     lng: "en",
     fallbackLng: "en",
-    interpolation: {
-      escapeValue: false
-    }
+    interpolation: { escapeValue: false }
   });
 
 export default i18n;
