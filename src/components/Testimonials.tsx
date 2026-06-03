@@ -1,110 +1,228 @@
 "use client";
 
-const testimonials = [
-  { quote: "Built my portfolio in 5 minutes. Absolutely wild. 🤯", author: "@sarahdesigns", role: "UI Designer" },
-  { quote: "This is literally magic. Goodbye Wix, goodbye Squarespace. ✨", author: "@alexbuilds", role: "Startup Founder" },
-  { quote: "Generated a full SaaS landing page from one sentence. Insane.", author: "@devmark", role: "Developer" },
-  { quote: "The AI actually understands context. This is the future. 🚀", author: "@priyacreates", role: "Product Manager" },
-  { quote: "3x faster than building from scratch. My clients are obsessed.", author: "@studiojay", role: "Freelancer" },
-  { quote: "No-code finally done right. Zorviq is in a different league.", author: "@techfounder", role: "CEO" },
-  { quote: "From idea to live website in under 2 minutes. Game changer.", author: "@makerit", role: "Creator" },
-  { quote: "I've tried every builder. Zorviq is the one that actually clicks. 💜", author: "@luna_ux", role: "UX Lead" },
-];
+import React, { useState } from "react";
+import { clsx, type ClassValue } from "clsx";
 
-function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
-  return (
-    <div style={{
-      flexShrink: 0,
-      width: "320px",
-      background: "#0D0D0D",
-      border: "1px solid rgba(255,255,255,0.06)",
-      borderRadius: "14px",
-      padding: "24px",
-      margin: "0 10px",
-    }}>
-      <div style={{
-        display: "flex", gap: "2px", marginBottom: "14px",
-      }}>
-        {[...Array(5)].map((_, i) => (
-          <span key={i} style={{ color: "#7C3AED", fontSize: "0.85rem" }}>★</span>
-        ))}
-      </div>
-      <p style={{
-        fontSize: "0.875rem", color: "#CCC", lineHeight: 1.7,
-        marginBottom: "16px", fontStyle: "italic",
-      }}>
-        &ldquo;{quote}&rdquo;
-      </p>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <div style={{
-          width: "32px", height: "32px", borderRadius: "50%",
-          background: "linear-gradient(135deg,#7C3AED,#6366F1)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "0.8rem", fontWeight: 700, color: "#fff",
-          flexShrink: 0,
-        }}>
-          {author[1].toUpperCase()}
-        </div>
-        <div>
-          <p style={{ fontSize: "0.78rem", fontWeight: 600, color: "#fff" }}>{author}</p>
-          <p style={{ fontSize: "0.68rem", color: "#555" }}>{role}</p>
-        </div>
-      </div>
-    </div>
-  );
+function cn(...inputs: ClassValue[]) {
+  return clsx(inputs);
 }
 
+const testimonials = [
+  {
+    id: 1,
+    quote: "This changed everything for me.",
+    author: "Sarah Chen",
+    role: "Designer at Figma",
+    avatar:
+      "https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=1480&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    quote: "Simply brilliant. Nothing else compares.",
+    author: "Marcus Johnson",
+    role: "Engineer at Vercel",
+    avatar:
+      "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=1287&auto=format&fit=crop",
+  },
+  {
+    id: 3,
+    quote: "The attention to detail is unmatched.",
+    author: "Elena Rodriguez",
+    role: "Founder at Craft",
+    avatar:
+      "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=2670&auto=format&fit=crop",
+  },
+];
+
 export default function Testimonials() {
-  // Duplicate for infinite loop
-  const all = [...testimonials, ...testimonials];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayedQuote, setDisplayedQuote] = useState(testimonials[0].quote);
+  const [displayedRole, setDisplayedRole] = useState(testimonials[0].role);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const handleSelect = (index: number) => {
+    if (index === activeIndex || isAnimating) return;
+
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setDisplayedQuote(testimonials[index].quote);
+      setDisplayedRole(testimonials[index].role);
+      setActiveIndex(index);
+
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 300);
+    }, 200);
+  };
 
   return (
-    <section style={{ padding: "80px 0", overflow: "hidden", position: "relative" }}>
-      {/* Fade edges */}
-      <div style={{
-        position: "absolute", top: 0, left: 0, bottom: 0,
-        width: "120px",
-        background: "linear-gradient(to right, #000, transparent)",
-        zIndex: 2, pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "absolute", top: 0, right: 0, bottom: 0,
-        width: "120px",
-        background: "linear-gradient(to left, #000, transparent)",
-        zIndex: 2, pointerEvents: "none",
-      }} />
+    <section
+      aria-labelledby="testimonials-heading"
+      className="min-h-screen flex items-center justify-center py-20"
+    >
+      <div className="max-w-7xl mx-auto px-6 flex flex-col items-center w-full">
 
-      {/* Row 1 — forward */}
-      <div style={{
-        display: "flex",
-        width: "max-content",
-        animation: "marquee 40s linear infinite",
-        marginBottom: "16px",
-      }}>
-        {all.map((t, i) => (
-          <TestimonialCard
-            key={i}
-            quote={t.quote}
-            author={t.author}
-            role={t.role}
-          />
-        ))}
-      </div>
+        {/* Badge */}
+        <span
+          className="badge"
+          style={{
+            marginBottom: 12,
+            display: "inline-flex",
+          }}
+        >
+          <span className="badge-dot" />
+          Testimonials
+        </span>
 
-      {/* Row 2 — reverse */}
-      <div style={{
-        display: "flex",
-        width: "max-content",
-        animation: "marquee 40s linear infinite reverse",
-      }}>
-        {[...all].reverse().map((t, i) => (
-          <TestimonialCard
-            key={i}
-            quote={t.quote}
-            author={t.author}
-            role={t.role}
-          />
-        ))}
+        {/* Heading */}
+        <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+          <h2
+            id="testimonials-heading"
+            style={{
+              fontFamily: "'Inter',sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              color: "#F2F2F2",
+              lineHeight: 1.1,
+              letterSpacing: "-0.04em",
+              margin: "0 0 10px",
+              textAlign: "center",
+            }}
+          >
+            What our{" "}
+            <span
+              style={{
+                background:
+                  "linear-gradient(128deg,#EDE9FE 0%,#C4B5FD 22%,#A78BFA 48%,#8B5CF6 74%,#7C3AED 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              users say
+            </span>
+          </h2>
+
+          <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-neutral-400 text-center">
+            Discover how thousands of teams streamline their operations and
+            build faster with our platform.
+          </p>
+        </div>
+
+        {/* Testimonial Area */}
+        <div className="w-full max-w-6xl flex flex-col items-center justify-center text-center gap-14 mt-24">
+
+          {/* Quote */}
+          <div className="relative flex items-center justify-center w-full min-h-[220px]">
+
+            {/* Opening Quote */}
+            <span
+              className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 text-[140px] text-white/25 leading-none select-none"
+              aria-hidden="true"
+            >
+              &ldquo;
+            </span>
+
+            <div className="max-w-4xl px-6 md:px-10">
+              <p
+                className={cn(
+                  "text-3xl md:text-5xl lg:text-6xl font-light text-white leading-tight text-center transition-all duration-300",
+                  isAnimating
+                    ? "opacity-0 blur-sm scale-95"
+                    : "opacity-100 blur-0 scale-100"
+                )}
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                }}
+              >
+                {displayedQuote}
+              </p>
+            </div>
+
+            {/* Closing Quote */}
+            <span
+              className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 text-[140px] text-white/25 leading-none select-none"
+              aria-hidden="true"
+            >
+              &rdquo;
+            </span>
+          </div>
+
+          {/* Role */}
+          <div className="min-h-[24px] flex items-center justify-center">
+            <p
+              className={cn(
+                "uppercase tracking-[0.35em] text-xs text-neutral-500 text-center transition-all duration-300",
+                isAnimating
+                  ? "opacity-0 translate-y-2"
+                  : "opacity-100 translate-y-0"
+              )}
+            >
+              {displayedRole}
+            </p>
+          </div>
+
+          {/* Avatars */}
+          <div className="flex flex-col items-center gap-8">
+
+            {/* Avatar Row */}
+            <div className="flex items-center justify-center gap-6 flex-wrap">
+              {testimonials.map((testimonial, index) => {
+                const isActive = activeIndex === index;
+
+                return (
+                  <button
+                    key={testimonial.id}
+                    onClick={() => handleSelect(index)}
+                    className={cn(
+                      "relative transition-all duration-300",
+                      isActive ? "scale-110" : "hover:scale-105 opacity-70 hover:opacity-100"
+                    )}
+                  >
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.author}
+                      className={cn(
+                        "w-14 h-14 md:w-16 md:h-16 rounded-full object-cover transition-all duration-300",
+                        isActive
+                          ? "ring-4 ring-white shadow-2xl"
+                          : "ring-1 ring-white/10"
+                      )}
+                    />
+
+                    {isActive && (
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Active User Card */}
+            <div
+              className={cn(
+                "transition-all duration-300",
+                isAnimating
+                  ? "opacity-0 translate-y-2"
+                  : "opacity-100 translate-y-0"
+              )}
+            >
+              <h4
+                className="
+      text-white
+      text-xl
+      md:text-2xl
+      font-semibold
+      tracking-tight
+    "
+              >
+                {testimonials[activeIndex].author}
+              </h4>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

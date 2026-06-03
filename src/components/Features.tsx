@@ -1,6 +1,409 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export function AIBuildDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10">
+
+      {/* Glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.18),transparent_70%)]" />
+
+      {/* Browser */}
+      <motion.div
+        initial={{ scale: 0.92, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          duration: 1,
+          repeat: Infinity,
+          repeatDelay: 2
+        }}
+        className="absolute inset-6 rounded-2xl border border-white/10 bg-[#0d0d0d] overflow-hidden"
+      >
+
+        {/* Browser Header */}
+        <div className="h-10 border-b border-white/10 flex items-center px-4 gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-400" />
+          <div className="w-3 h-3 rounded-full bg-yellow-400" />
+          <div className="w-3 h-3 rounded-full bg-green-400" />
+
+          <div className="mx-auto bg-white/5 rounded-md px-4 py-1 text-xs text-white/40">
+            zorviq.app
+          </div>
+        </div>
+
+        {/* Prompt */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            repeatDelay: 2
+          }}
+          className="mx-6 mt-6 rounded-xl border border-violet-500/20 bg-black/60 p-4"
+        >
+          <div className="text-xs text-violet-300 mb-2">
+            Prompt
+          </div>
+
+          <div className="text-white/80 text-sm">
+            Build a fintech dashboard with stock analytics
+          </div>
+        </motion.div>
+
+        {/* Progress */}
+        <div className="px-6 mt-5">
+          <div className="space-y-3">
+
+            {[
+              "Generating Layout",
+              "Creating Components",
+              "Writing Content",
+              "Applying Theme"
+            ].map((item, i) => (
+              <motion.div
+                key={item}
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: [0, 1, 1]
+                }}
+                transition={{
+                  duration: 1,
+                  delay: i * 0.5,
+                  repeat: Infinity,
+                  repeatDelay: 2
+                }}
+                className="flex items-center gap-3"
+              >
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+
+                <span className="text-white/70 text-xs">
+                  {item}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Generated UI */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0, 0, 1, 1]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity
+          }}
+          className="px-6 mt-8"
+        >
+
+          {/* Hero */}
+          <motion.div
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            transition={{
+              delay: 2,
+              duration: 0.8,
+              repeat: Infinity,
+              repeatDelay: 4
+            }}
+            className="h-28 rounded-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500"
+          />
+
+          {/* Cards */}
+          <div className="grid grid-cols-3 gap-3 mt-4">
+
+            {[1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  opacity: 1,
+                  y: 0
+                }}
+                transition={{
+                  delay: 2.5 + i * 0.2,
+                  duration: 0.6,
+                  repeat: Infinity,
+                  repeatDelay: 4
+                }}
+                className="h-20 rounded-xl bg-white/5 border border-white/10"
+              />
+            ))}
+          </div>
+
+          {/* Analytics */}
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{
+              delay: 3.5,
+              duration: 1,
+              repeat: Infinity,
+              repeatDelay: 4
+            }}
+            className="mt-5 h-28 rounded-xl bg-white/5 border border-white/10 flex items-end gap-3 p-4"
+          >
+            {[40, 70, 90, 55, 80].map((h, i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-md bg-violet-500"
+                style={{ height: `${h}%` }}
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Deploy Badge */}
+        <motion.div
+          animate={{
+            opacity: [0, 0, 0, 1, 1]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity
+          }}
+          className="absolute bottom-5 right-5"
+        >
+          <div className="rounded-xl border border-green-500/30 bg-green-500/10 px-4 py-2">
+            <div className="text-green-400 text-xs">
+              ✓ Live on zorviq.app
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Floating AI Orb */}
+      <motion.div
+        animate={{
+          y: [-10, 10, -10],
+          rotate: [0, 180, 360]
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity
+        }}
+        className="absolute right-6 top-10"
+      >
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 blur-[1px]" />
+      </motion.div>
+    </div>
+  );
+}
+
+export function AICopyDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(109,40,217,0.15),transparent_70%)]" />
+      <div className="flex items-center gap-3 mb-6 relative z-10">
+        <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+        <div className="text-xs text-white/40 font-mono">meridian-copy.md (Optimizing)</div>
+      </div>
+      <div className="relative z-10 p-5 rounded-xl border border-violet-500/30 bg-violet-500/10 mb-4">
+        <div className="absolute -top-3 right-4 bg-violet-500 text-white text-[10px] font-bold px-2 py-1 rounded">
+          98% Match
+        </div>
+        <div className="text-[10px] text-violet-400 mb-2 font-mono uppercase tracking-wider">Hero Headline</div>
+        <motion.div 
+          animate={{ opacity: [0.5, 1, 0.5] }} 
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-2xl font-bold text-white leading-tight"
+        >
+          Turn data into decisions.<br />
+          <span className="text-violet-400">In real time.</span>
+        </motion.div>
+      </div>
+      <div className="grid grid-cols-2 gap-4 relative z-10">
+        {[1, 2].map((i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: [0, 1, 1, 0], y: [10, 0, 0, -10] }}
+            transition={{ delay: i * 2, duration: 4, repeat: Infinity }}
+            className="p-3 rounded-lg border border-white/5 bg-white/5"
+          >
+            <div className="text-[10px] text-white/40 mb-2 font-mono uppercase">Generating Variant {i}</div>
+            <div className="space-y-2">
+              <div className="h-1.5 w-full bg-white/10 rounded-full" />
+              <div className="h-1.5 w-4/5 bg-white/10 rounded-full" />
+              <div className="h-1.5 w-2/3 bg-white/10 rounded-full" />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function DesignSystemDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(59,130,246,0.15),transparent_70%)]" />
+      <div className="flex items-center justify-between mb-6 relative z-10">
+        <div className="text-xs text-white/40 font-mono">tokens.json</div>
+        <motion.div 
+          animate={{ rotate: 360 }} 
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          className="w-4 h-4 rounded-full border-2 border-blue-500 border-t-transparent"
+        />
+      </div>
+      <div className="grid grid-cols-5 gap-3 mb-6 relative z-10">
+        {['#0F62FE', '#161616', '#393939', '#F4F4F4', '#42BE65'].map((hex, i) => (
+          <motion.div 
+            key={hex}
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ delay: i * 0.4, duration: 2, repeat: Infinity }}
+            className="flex flex-col items-center gap-2"
+          >
+            <div className="w-10 h-10 rounded-lg border border-white/10 shadow-lg" style={{ backgroundColor: hex }} />
+            <div className="text-[9px] text-white/40 font-mono">{hex}</div>
+          </motion.div>
+        ))}
+      </div>
+      <div className="space-y-3 relative z-10">
+        {[
+          { size: "text-2xl", font: "IBM Plex Sans", label: "Display" },
+          { size: "text-lg", font: "Inter", label: "Heading" },
+          { size: "text-xs", font: "JetBrains Mono", label: "Monospace" }
+        ].map((t, i) => (
+          <motion.div 
+            key={i}
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: i * 0.5, duration: 1, repeat: Infinity, repeatDelay: 3 }}
+            className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5"
+          >
+            <div className={`${t.size} text-white/80 font-bold`}>{t.font}</div>
+            <div className="text-[10px] text-white/30 uppercase">{t.label}</div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function DeployDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.1),transparent_70%)]" />
+      <div className="flex-1 rounded-xl bg-black border border-white/10 p-4 font-mono text-xs overflow-hidden relative z-10">
+        <div className="flex gap-2 mb-4">
+          <div className="w-2 h-2 rounded-full bg-red-500" />
+          <div className="w-2 h-2 rounded-full bg-yellow-500" />
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+        </div>
+        <div className="space-y-2">
+          <div className="text-white/60">$ zorviq deploy --prod</div>
+          {[
+            { text: "Building project...", color: "text-white/40" },
+            { text: "Optimizing assets (147kb)", color: "text-white/40" },
+            { text: "Deploying to edge network...", color: "text-white/40" },
+            { text: "✓ Live on 38 global regions", color: "text-emerald-400" },
+          ].map((line, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 + i * 0.8, duration: 0.5, repeat: Infinity, repeatDelay: 5 }}
+              className={line.color}
+            >
+              {line.text}
+            </motion.div>
+          ))}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 4, duration: 0.5, repeat: Infinity, repeatDelay: 5 }}
+            className="mt-6 p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 flex items-center gap-2"
+          >
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            zorviq.app/live
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function FigmaDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 p-6 flex flex-col">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(242,78,30,0.15),transparent_70%)]" />
+      <div className="flex items-center gap-4 mb-4 relative z-10">
+        <div className="px-3 py-1 rounded-md bg-white/5 text-[10px] text-white/50 font-mono">figma.com/file/...</div>
+        <motion.div 
+          animate={{ x: [0, 10, 0] }} 
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="text-white/30"
+        >→</motion.div>
+        <div className="px-3 py-1 rounded-md bg-violet-500/20 text-[10px] text-violet-400 font-mono">Code Generated</div>
+      </div>
+      <div className="flex-1 grid grid-cols-2 gap-4 relative z-10">
+        <div className="rounded-xl border border-white/10 bg-[#1E1E1E] p-4 flex flex-col justify-center items-center relative overflow-hidden">
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="w-32 h-24 border border-[#0fA958] bg-[#0fA958]/10 rounded flex flex-col items-center justify-center relative p-2"
+          >
+            <div className="absolute top-0 left-0 bg-[#0fA958] text-white text-[8px] px-1">Frame</div>
+            <div className="w-20 h-4 bg-white/20 rounded-sm mb-2" />
+            <div className="w-24 h-2 bg-white/10 rounded-sm" />
+          </motion.div>
+        </div>
+        <div className="rounded-xl border border-violet-500/20 bg-black p-4 font-mono text-[8px] sm:text-[10px] text-white/40 leading-relaxed overflow-hidden">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
+          >
+            <div className="text-violet-400">export default function Hero() {"{"}</div>
+            <div className="pl-2">return (</div>
+            <div className="pl-4 text-emerald-400">{"<div className=\"flex flex-col\">"}</div>
+            <div className="pl-6 text-blue-400">{"<h1>Hello World</h1>"}</div>
+            <div className="pl-4 text-emerald-400">{"</div>"}</div>
+            <div className="pl-2">)</div>
+            <div className="text-violet-400">{"}"}</div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function AnimationDemo() {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 p-6 flex flex-col">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(167,139,250,0.15),transparent_70%)]" />
+      <div className="flex items-center justify-between mb-6 relative z-10">
+        <div className="text-xs text-white/40 font-mono">Motion Timeline</div>
+        <div className="text-xs text-violet-400 font-mono animate-pulse">Running</div>
+      </div>
+      <div className="flex-1 space-y-4 relative z-10">
+        {[
+          { label: "Navbar", color: "bg-blue-500" },
+          { label: "Hero Text", color: "bg-violet-500" },
+          { label: "Cards", color: "bg-emerald-500" },
+          { label: "Footer", color: "bg-fuchsia-500" },
+        ].map((track, i) => (
+          <div key={i} className="flex items-center gap-4">
+            <div className="w-16 text-[10px] text-white/40 font-mono">{track.label}</div>
+            <div className="flex-1 h-6 bg-white/5 rounded-md relative overflow-hidden">
+              <motion.div
+                initial={{ left: "-20%" }}
+                animate={{ left: "100%" }}
+                transition={{ duration: 2, delay: i * 0.3, repeat: Infinity, ease: "linear" }}
+                className={`absolute top-1 bottom-1 w-1/3 rounded ${track.color} opacity-60`}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const FEATURES = [
   {
@@ -12,150 +415,7 @@ const FEATURES = [
     stat: "< 5s",
     statLabel: "avg. generation time",
     accent: "#7C3AED",
-    preview: (
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {/* Prompt bar */}
-        <div style={{
-          background: "rgba(8,8,8,0.95)",
-          border: "1px solid rgba(124,58,237,0.22)",
-          borderRadius: "8px",
-          padding: "9px 14px",
-          marginBottom: "10px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}>
-          <span style={{ fontSize: "0.65rem", color: "rgba(167,139,250,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>✦</span>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.67rem", color: "rgba(255,255,255,0.4)" }}>
-            Landing page for Forge — CI/CD tool for dev teams
-          </span>
-          <span style={{
-            display: "inline-block", width: "1.5px", height: "11px",
-            background: "#7C3AED", marginLeft: "2px", verticalAlign: "middle",
-            animation: "blink 1s step-end infinite",
-          }} />
-        </div>
-
-        {/* Browser chrome */}
-        <div style={{
-          background: "#111",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}>
-          {/* Browser top bar */}
-          <div style={{
-            background: "#1a1a1a",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            padding: "7px 12px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}>
-            <div style={{ display: "flex", gap: "5px" }}>
-              {["#FF5F57","#FEBC2E","#28C840"].map(c => (
-                <div key={c} style={{ width: "8px", height: "8px", borderRadius: "50%", background: c, opacity: 0.8 }} />
-              ))}
-            </div>
-            <div style={{
-              flex: 1, background: "rgba(255,255,255,0.05)", borderRadius: "5px",
-              padding: "3px 10px", display: "flex", alignItems: "center", gap: "6px",
-              maxWidth: "220px", margin: "0 auto",
-            }}>
-              <span style={{ fontSize: "0.55rem", color: "rgba(16,185,129,0.7)" }}>🔒</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.3)" }}>
-                forge.dev
-              </span>
-            </div>
-          </div>
-
-          {/* Page content */}
-          <div style={{ background: "#0C0C14", padding: "14px 16px" }}>
-            {/* Nav */}
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              marginBottom: "16px", paddingBottom: "10px",
-              borderBottom: "1px solid rgba(255,255,255,0.05)",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <div style={{ width: "18px", height: "18px", background: "linear-gradient(135deg,#7C3AED,#4F46E5)", borderRadius: "5px" }} />
-                <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "#fff" }}>Forge</span>
-              </div>
-              <div style={{ display: "flex", gap: "14px" }}>
-                {["Product","Docs","Pricing","Changelog"].map(n => (
-                  <span key={n} style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.3)" }}>{n}</span>
-                ))}
-              </div>
-              <div style={{
-                background: "linear-gradient(135deg,#7C3AED,#6D28D9)",
-                borderRadius: "5px", padding: "4px 10px",
-                fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", fontWeight: 600, color: "#fff",
-              }}>Start free</div>
-            </div>
-
-            {/* Hero */}
-            <div style={{ textAlign: "center", padding: "4px 0 12px" }}>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: "5px",
-                background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)",
-                borderRadius: "99px", padding: "2px 8px", marginBottom: "8px",
-              }}>
-                <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#10B981" }} />
-                <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(16,185,129,0.8)" }}>Now in General Availability</span>
-              </div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "1rem", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: "5px", letterSpacing: "-0.03em" }}>
-                Merge with confidence.<br />
-                <span style={{ background: "linear-gradient(120deg,#818CF8,#A78BFA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-                  Ship without fear.
-                </span>
-              </div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.62rem", color: "rgba(255,255,255,0.3)", marginBottom: "10px", lineHeight: 1.5 }}>
-                CI/CD pipelines that understand your codebase.<br />Zero-config deploys for teams who move fast.
-              </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: "6px" }}>
-                <div style={{ background: "#4F46E5", borderRadius: "5px", padding: "5px 14px", fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", fontWeight: 600, color: "#fff" }}>
-                  Start building free
-                </div>
-                <div style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: "5px", padding: "5px 12px", fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
-                  View demo →
-                </div>
-              </div>
-            </div>
-
-            {/* Stats row */}
-            <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
-              {[
-                { v: "12,400+", l: "Teams" },
-                { v: "99.97%", l: "Uptime" },
-                { v: "2.1s", l: "Avg build" },
-              ].map((s, i) => (
-                <div key={i} style={{
-                  flex: 1, background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.04)",
-                  borderRadius: "6px", padding: "6px 8px", textAlign: "center",
-                }}>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.7rem", fontWeight: 700, color: "#fff" }}>{s.v}</div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "rgba(255,255,255,0.22)" }}>{s.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Generated badge */}
-        <div style={{
-          position: "absolute", bottom: "6px", right: "6px",
-          background: "rgba(16,185,129,0.09)",
-          border: "1px solid rgba(16,185,129,0.22)",
-          borderRadius: "6px",
-          padding: "3px 9px",
-          display: "flex", alignItems: "center", gap: "5px",
-        }}>
-          <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#10B981", boxShadow: "0 0 5px #10B981" }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.55rem", color: "rgba(16,185,129,0.8)" }}>AI-generated · 4.2s</span>
-        </div>
-      </div>
-    ),
+    preview: <AIBuildDemo />,
   },
   {
     id: "copy",
@@ -166,89 +426,7 @@ const FEATURES = [
     stat: "3×",
     statLabel: "avg. conversion lift",
     accent: "#6D28D9",
-    preview: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "0", background: "rgba(8,8,8,0.95)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", overflow: "hidden" }}>
-        {/* Editor toolbar */}
-        <div style={{
-          background: "#141414",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          padding: "7px 12px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}>
-          <div style={{ display: "flex", gap: "5px" }}>
-            {["#FF5F57","#FEBC2E","#28C840"].map(c => (
-              <div key={c} style={{ width: "7px", height: "7px", borderRadius: "50%", background: c, opacity: 0.7 }} />
-            ))}
-          </div>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.62rem", color: "rgba(255,255,255,0.25)", marginLeft: "4px" }}>meridian-copy.md — ZORVIQ Editor</span>
-          <div style={{ marginLeft: "auto", display: "flex", gap: "6px" }}>
-            <div style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.25)", borderRadius: "4px", padding: "2px 8px", fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "#A78BFA" }}>✦ 3 variants</div>
-          </div>
-        </div>
-
-        {/* Editor body */}
-        <div style={{ padding: "14px 16px" }}>
-          {/* Selected / active copy block */}
-          <div style={{
-            background: "rgba(124,58,237,0.07)",
-            border: "1px solid rgba(124,58,237,0.18)",
-            borderLeft: "3px solid #7C3AED",
-            borderRadius: "0 6px 6px 0",
-            padding: "10px 12px",
-            marginBottom: "8px",
-            position: "relative",
-          }}>
-            <div style={{
-              position: "absolute", top: "6px", right: "8px",
-              background: "rgba(124,58,237,0.2)", borderRadius: "4px", padding: "1px 6px",
-              fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "#C4B5FD",
-            }}>Selected · 94% confidence</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(167,139,250,0.5)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Hero Headline</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.88rem", fontWeight: 800, color: "#fff", lineHeight: 1.25, letterSpacing: "-0.02em" }}>
-              Turn data into decisions.<br />
-              <span style={{ color: "#A78BFA" }}>In real time.</span>
-            </div>
-          </div>
-
-          {/* Variant 2 */}
-          <div style={{
-            border: "1px solid rgba(255,255,255,0.05)",
-            borderRadius: "6px",
-            padding: "8px 12px",
-            marginBottom: "6px",
-            opacity: 0.65,
-          }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.22)", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Variant B</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.78rem", fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "-0.015em" }}>
-              Every metric. Every moment. One dashboard.
-            </div>
-          </div>
-
-          {/* CTA rows */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginTop: "8px" }}>
-            {[
-              { label: "Primary CTA", text: "Get started free →", score: 97 },
-              { label: "Secondary CTA", text: "See it in action", score: 88 },
-            ].map((item, i) => (
-              <div key={i} style={{
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.05)",
-                borderRadius: "6px",
-                padding: "8px 10px",
-              }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "rgba(255,255,255,0.2)", marginBottom: "3px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{item.label}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.7rem", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "5px" }}>{item.text}</div>
-                <div style={{ height: "2px", background: "rgba(255,255,255,0.04)", borderRadius: "1px" }}>
-                  <div style={{ height: "100%", width: `${item.score}%`, background: "linear-gradient(90deg,#7C3AED,#A78BFA)", borderRadius: "1px" }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    ),
+    preview: <AICopyDemo />,
   },
   {
     id: "design",
@@ -259,86 +437,7 @@ const FEATURES = [
     stat: "100%",
     statLabel: "brand consistency",
     accent: "#8B5CF6",
-    preview: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "9px" }}>
-        {/* Token panel header */}
-        <div style={{
-          background: "rgba(8,8,8,0.95)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}>
-          <div style={{
-            background: "#141414",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            padding: "7px 12px",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.62rem", color: "rgba(255,255,255,0.3)" }}>
-              meridian-tokens.json
-            </span>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(167,139,250,0.5)" }}>42 tokens · synced</span>
-          </div>
-          <div style={{ padding: "12px 14px" }}>
-            {/* Color swatches with hex */}
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "7px" }}>Color / Brand</div>
-            <div style={{ display: "flex", gap: "6px", marginBottom: "10px" }}>
-              {[
-                { hex: "#0F62FE", name: "primary" },
-                { hex: "#161616", name: "bg" },
-                { hex: "#393939", name: "surface" },
-                { hex: "#F4F4F4", name: "text" },
-                { hex: "#42BE65", name: "success" },
-              ].map(c => (
-                <div key={c.hex} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px" }}>
-                  <div style={{ width: "26px", height: "26px", background: c.hex, borderRadius: "5px", border: "1px solid rgba(255,255,255,0.06)" }} />
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.45rem", color: "rgba(255,255,255,0.2)" }}>{c.hex}</span>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.45rem", color: "rgba(255,255,255,0.2)" }}>{c.name}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Typography */}
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "7px" }}>Typography</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "10px" }}>
-              {[
-                { size: "1.6rem", weight: 800, sample: "IBM Plex Sans", role: "Display / 800" },
-                { size: "0.85rem", weight: 600, sample: "IBM Plex Sans", role: "Heading / 600" },
-                { size: "0.68rem", weight: 400, sample: "IBM Plex Mono", role: "Mono / 400" },
-              ].map((t, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: t.size, fontWeight: t.weight, color: "rgba(255,255,255,0.7)", lineHeight: 1 }}>{t.sample}</span>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "rgba(255,255,255,0.18)" }}>{t.role}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Spacing + radius tokens */}
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "7px" }}>Tokens</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "5px" }}>
-              {[
-                { k: "space-4", v: "16px" },
-                { k: "radius-md", v: "8px" },
-                { k: "shadow-lg", v: "0 8px 32px" },
-                { k: "border", v: "1px solid" },
-                { k: "duration", v: "220ms" },
-                { k: "ease", v: "cubic-bezier" },
-              ].map(t => (
-                <div key={t.k} style={{
-                  background: "rgba(124,58,237,0.06)",
-                  border: "1px solid rgba(124,58,237,0.1)",
-                  borderRadius: "5px",
-                  padding: "5px 7px",
-                }}>
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.48rem", color: "rgba(167,139,250,0.55)", marginBottom: "1px" }}>{t.k}</div>
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.52rem", color: "rgba(255,255,255,0.45)" }}>{t.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
+    preview: <DesignSystemDemo />,
   },
   {
     id: "deploy",
@@ -349,83 +448,7 @@ const FEATURES = [
     stat: "0.8s",
     statLabel: "avg. deploy time",
     accent: "#5B21B6",
-    preview: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {/* Terminal */}
-        <div style={{
-          background: "#0D0D0D",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}>
-          <div style={{
-            background: "#161616",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            padding: "7px 12px",
-            display: "flex", alignItems: "center", gap: "8px",
-          }}>
-            <div style={{ display: "flex", gap: "5px" }}>
-              {["#FF5F57","#FEBC2E","#28C840"].map(c => (
-                <div key={c} style={{ width: "7px", height: "7px", borderRadius: "50%", background: c, opacity: 0.7 }} />
-              ))}
-            </div>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.22)" }}>Terminal — zorviq deploy</span>
-          </div>
-          <div style={{ padding: "12px 14px", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", lineHeight: 1.85 }}>
-            {[
-              { text: "$ zorviq deploy --prod", color: "rgba(255,255,255,0.55)" },
-              { text: "  Deploying meridian-landing (main@a3f82c1)", color: "rgba(255,255,255,0.3)" },
-              { text: "✓ Build completed in 1.8s", color: "rgba(16,185,129,0.75)" },
-              { text: "✓ Assets optimized · 147kb gzipped", color: "rgba(16,185,129,0.75)" },
-              { text: "✓ Edge network propagated · 38 regions", color: "rgba(16,185,129,0.75)" },
-              { text: "✓ SSL certificate issued", color: "rgba(16,185,129,0.75)" },
-              { text: "", color: "" },
-              { text: "  ⬡  meridian.app  (0.81s)", color: "#A78BFA" },
-            ].map((line, i) => (
-              <div key={i} style={{ color: line.color, animation: `fadeInUp 0.25s ease-out ${i * 0.1}s both` }}>{line.text || "\u00A0"}</div>
-            ))}
-          </div>
-        </div>
-
-        {/* Live URL + metrics */}
-        <div style={{
-          background: "rgba(16,185,129,0.06)",
-          border: "1px solid rgba(16,185,129,0.18)",
-          borderRadius: "8px",
-          padding: "10px 14px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", boxShadow: "0 0 7px #10B981", flexShrink: 0 }} />
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.68rem", color: "rgba(255,255,255,0.65)" }}>meridian.app</span>
-          </div>
-          <div style={{ display: "flex", gap: "14px" }}>
-            {[{ l: "P99", v: "38ms" }, { l: "Score", v: "99" }].map(m => (
-              <div key={m.l} style={{ textAlign: "right" }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "#fff" }}>{m.v}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.5rem", color: "rgba(255,255,255,0.22)" }}>{m.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Region grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: "4px" }}>
-          {["IAD","LHR","SIN","NRT","SYD","GRU","CDG","SEA","ORD","FRA","BOM","YYZ"].map((r, i) => (
-            <div key={r} style={{
-              background: i < 8 ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${i < 8 ? "rgba(16,185,129,0.18)" : "rgba(255,255,255,0.04)"}`,
-              borderRadius: "4px",
-              padding: "3px 0",
-              textAlign: "center",
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: "0.5rem",
-              color: i < 8 ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.18)",
-            }}>{r}</div>
-          ))}
-        </div>
-      </div>
-    ),
+    preview: <DeployDemo />,
   },
   {
     id: "figma",
@@ -436,91 +459,7 @@ const FEATURES = [
     stat: "1:1",
     statLabel: "design fidelity",
     accent: "#6D28D9",
-    preview: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {/* Top label bar */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ flex: 1, background: "rgba(255,255,255,0.04)", borderRadius: "6px", padding: "5px 10px", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "0.65rem" }}>🎨</span>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.3)" }}>figma.com/file/vNx8a…/Apex-v2</span>
-          </div>
-          <div style={{ padding: "5px 10px", background: "rgba(124,58,237,0.12)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "#A78BFA" }}>Sync</div>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-          {/* Figma canvas side */}
-          <div style={{
-            background: "#1E1E1E",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}>
-            <div style={{ background: "#2C2C2C", padding: "5px 8px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: "5px" }}>
-              <span style={{ fontSize: "0.55rem" }}>◆</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(255,255,255,0.35)" }}>Apex / Hero / Desktop</span>
-            </div>
-            <div style={{ padding: "10px 10px", background: "#1a1a2e" }}>
-              {/* Simulated Figma frame */}
-              <div style={{ border: "1px dashed rgba(114,237,246,0.3)", borderRadius: "3px", padding: "8px" }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.75rem", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: "4px" }}>
-                  Ship products<br />
-                  <span style={{ color: "#818CF8" }}>10× faster.</span>
-                </div>
-                <div style={{ width: "80%", height: "3px", background: "rgba(255,255,255,0.12)", borderRadius: "2px", marginBottom: "3px" }} />
-                <div style={{ width: "65%", height: "3px", background: "rgba(255,255,255,0.07)", borderRadius: "2px", marginBottom: "8px" }} />
-                <div style={{ display: "inline-flex", background: "#4F46E5", borderRadius: "4px", padding: "4px 10px" }}>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "#fff", fontWeight: 600 }}>Get started</span>
-                </div>
-              </div>
-              {/* Layer names */}
-              <div style={{ marginTop: "6px", display: "flex", flexDirection: "column", gap: "2px" }}>
-                {["Frame / Hero","Text / Headline","Text / Sub","Button / Primary"].map((l, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{ fontSize: "0.45rem", color: "rgba(114,237,246,0.4)" }}>▸</span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.5rem", color: "rgba(255,255,255,0.22)" }}>{l}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Generated code side */}
-          <div style={{
-            background: "#0D1117",
-            border: "1px solid rgba(124,58,237,0.15)",
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}>
-            <div style={{ background: "#161b22", padding: "5px 8px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: "5px" }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(167,139,250,0.5)" }}>Hero.tsx — generated</span>
-            </div>
-            <div style={{ padding: "10px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.54rem", lineHeight: 1.75 }}>
-              <div style={{ color: "rgba(255,255,255,0.18)" }}>{"export default function Hero() {"}</div>
-              <div style={{ color: "rgba(255,255,255,0.18)", paddingLeft: "8px" }}>{"return ("}</div>
-              <div style={{ color: "rgba(167,139,250,0.65)", paddingLeft: "16px" }}>{"<section"}</div>
-              <div style={{ color: "rgba(255,255,255,0.25)", paddingLeft: "24px" }}>{"className={styles.hero}"}</div>
-              <div style={{ color: "rgba(167,139,250,0.65)", paddingLeft: "16px" }}>{"/>"}</div>
-              <div style={{ color: "rgba(255,255,255,0.18)", paddingLeft: "8px" }}>{");"}</div>
-              <div style={{ color: "rgba(255,255,255,0.18)" }}>{"}"}</div>
-            </div>
-            {/* Match score */}
-            <div style={{
-              borderTop: "1px solid rgba(255,255,255,0.05)",
-              padding: "6px 10px",
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-            }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "rgba(255,255,255,0.2)" }}>Fidelity match</span>
-              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                <div style={{ width: "50px", height: "2px", background: "rgba(255,255,255,0.06)", borderRadius: "1px" }}>
-                  <div style={{ width: "98%", height: "100%", background: "linear-gradient(90deg,#7C3AED,#10B981)", borderRadius: "1px" }} />
-                </div>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.55rem", color: "rgba(16,185,129,0.7)" }}>98%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
+    preview: <FigmaDemo />,
   },
   {
     id: "animations",
@@ -531,140 +470,62 @@ const FEATURES = [
     stat: "60fps",
     statLabel: "guaranteed smooth",
     accent: "#7C3AED",
-    preview: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {/* Timeline editor */}
-        <div style={{
-          background: "#0D0D0D",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}>
-          <div style={{
-            background: "#161616",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            padding: "6px 12px",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", color: "rgba(255,255,255,0.25)" }}>Motion Timeline — Hero Section</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.55rem", color: "rgba(255,255,255,0.2)" }}>0:00 / 1.2s</span>
-              <div style={{ width: "18px", height: "18px", background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", color: "#A78BFA" }}>▶</div>
-            </div>
-          </div>
-
-          {/* Track rows */}
-          <div style={{ padding: "8px 0" }}>
-            {[
-              { layer: "Navbar", color: "#818CF8", start: 0, width: 15, delay: "0s" },
-              { layer: "Badge", color: "#A78BFA", start: 8, width: 18, delay: "0.08s" },
-              { layer: "Headline", color: "#7C3AED", start: 12, width: 24, delay: "0.12s" },
-              { layer: "Subtext", color: "#6D28D9", start: 18, width: 20, delay: "0.18s" },
-              { layer: "Input", color: "#5B21B6", start: 24, width: 22, delay: "0.24s" },
-              { layer: "Chips", color: "#4C1D95", start: 32, width: 18, delay: "0.32s" },
-            ].map((track, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: "0", marginBottom: "3px" }}>
-                <div style={{
-                  width: "80px", flexShrink: 0,
-                  padding: "3px 10px",
-                  fontFamily: "'Inter', sans-serif", fontSize: "0.58rem",
-                  color: "rgba(255,255,255,0.3)",
-                  borderRight: "1px solid rgba(255,255,255,0.04)",
-                }}>{track.layer}</div>
-                <div style={{ flex: 1, position: "relative", height: "18px", background: "rgba(255,255,255,0.02)" }}>
-                  <div style={{
-                    position: "absolute",
-                    left: `${track.start}%`,
-                    width: `${track.width}%`,
-                    top: "3px", bottom: "3px",
-                    background: track.color,
-                    opacity: 0.6,
-                    borderRadius: "3px",
-                    animation: `fadeInUp 0.3s ease-out ${track.delay} both`,
-                  }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Easing curve row */}
-          <div style={{
-            borderTop: "1px solid rgba(255,255,255,0.05)",
-            padding: "8px 12px",
-            display: "flex", alignItems: "center", gap: "12px",
-          }}>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.55rem", color: "rgba(255,255,255,0.2)" }}>Easing</span>
-            {["cubic-bezier(0.16,1,0.3,1)","ease-out","spring(1,90,22)"].map((e, i) => (
-              <div key={i} style={{
-                background: i === 0 ? "rgba(124,58,237,0.15)" : "rgba(255,255,255,0.03)",
-                border: `1px solid ${i === 0 ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.05)"}`,
-                borderRadius: "4px",
-                padding: "2px 8px",
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "0.5rem",
-                color: i === 0 ? "#A78BFA" : "rgba(255,255,255,0.2)",
-              }}>{e}</div>
-            ))}
-          </div>
-        </div>
-
-        {/* Live preview chips */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
-          {[
-            { name: "fadeInUp", dur: "0.6s", ease: "spring" },
-            { name: "scaleReveal", dur: "0.4s", ease: "cubic" },
-            { name: "staggerList", dur: "0.1s/item", ease: "ease-out" },
-            { name: "scrollDriven", dur: "auto", ease: "linear" },
-          ].map((anim, i) => (
-            <div key={i} style={{
-              background: "rgba(255,255,255,0.025)",
-              border: "1px solid rgba(255,255,255,0.05)",
-              borderRadius: "7px",
-              padding: "8px 10px",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-            }}>
-              <div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem", color: "rgba(167,139,250,0.7)", marginBottom: "2px" }}>{anim.name}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.52rem", color: "rgba(255,255,255,0.2)" }}>{anim.ease}</div>
-              </div>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.55rem", color: "rgba(255,255,255,0.25)" }}>{anim.dur}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
+    preview: <AnimationDemo />,
   },
 ];
 
 export default function Features() {
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState<number | null>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
 
-  // Keyboard navigation
+  // Scroll-driven animation (pinned scroll-jacking)
+  const sectionRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setActive(a => (a + 1) % FEATURES.length);
-      if (e.key === "ArrowLeft") setActive(a => (a - 1 + FEATURES.length) % FEATURES.length);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (sectionRef.current) {
+            const rect = sectionRef.current.getBoundingClientRect();
+            // Scroll distance is the section height minus the viewport height
+            const scrollDistance = rect.height - window.innerHeight;
+            if (scrollDistance > 0) {
+              // Calculate progress from 0 to 1
+              let progress = -rect.top / scrollDistance;
+              progress = Math.max(0, Math.min(1, progress));
+              
+              const index = Math.min(
+                FEATURES.length - 1,
+                Math.floor(progress * FEATURES.length)
+              );
+              setActive(index);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initialize
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const feat = FEATURES[active];
 
   return (
     <section
+      ref={sectionRef}
       id="features"
       aria-label="Product features"
       style={{
         position: "relative",
-        padding: "0 24px 140px",
-        background: "#060606",
-        overflow: "hidden",
+        height: "250vh", // Reduced from 400vh to make scrolling through features much faster
+        background: "linear-gradient(to bottom, #060606 0%, #060606 85%, #000000 100%)",
       }}
     >
-      {/* Ambient glow — continuous with hero */}
+      {/* Ambient glow — continuous with hero (Stays at the very top of the section) */}
       <div style={{
         position: "absolute",
         top: "-200px",
@@ -678,394 +539,227 @@ export default function Features() {
         pointerEvents: "none",
       }} />
 
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-
-        {/* ── Section header ── */}
-        <div style={{
-          textAlign: "center",
-          marginBottom: "72px",
-          animation: "featIn 0.8s cubic-bezier(0.16,1,0.3,1) both",
-        }}>
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: "7px",
-            padding: "4px 14px 4px 10px",
-            borderRadius: "9999px",
-            background: "rgba(124,58,237,0.08)",
-            border: "1px solid rgba(124,58,237,0.18)",
-            color: "#C4B5FD",
-            fontSize: "0.635rem",
-            fontWeight: 500,
-            letterSpacing: "0.08em",
-            fontFamily: "'Inter', sans-serif",
-            textTransform: "uppercase" as const,
-            marginBottom: "24px",
-          }}>
-            <span style={{
-              width: "4px", height: "4px", borderRadius: "50%",
-              background: "#A78BFA",
-              boxShadow: "0 0 8px rgba(167,139,250,0.9)",
-            }} />
-            Built for speed
-          </span>
-
-          <h2 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 900,
-            fontSize: "clamp(2.2rem, 4vw, 3.6rem)",
-            lineHeight: 1.08,
-            letterSpacing: "-0.04em",
-            color: "#f4f4f4",
-            marginBottom: "18px",
-          }}>
-            Every tool you need,{" "}
-            <span style={{
-              background: "linear-gradient(128deg, #EDE9FE 0%, #C4B5FD 25%, #A78BFA 55%, #7C3AED 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>nothing you don&apos;t.</span>
-          </h2>
-
-          <p style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "1rem",
-            color: "rgba(255,255,255,0.38)",
-            maxWidth: "460px",
-            margin: "0 auto",
-            lineHeight: 1.7,
-            fontWeight: 400,
-            letterSpacing: "0.005em",
-          }}>
-            Six powerful capabilities. One unified platform. Ship your website before you finish your coffee.
-          </p>
-        </div>
-
-        {/* ── Main interactive panel ── */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "340px 1fr",
-          gap: "2px",
-          background: "rgba(255,255,255,0.04)",
-          borderRadius: "20px",
-          overflow: "hidden",
-          border: "1px solid rgba(255,255,255,0.05)",
-          animation: "featIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both",
-          minHeight: "480px",
-        }} className="features-panel">
-
-          {/* ── Tab list ── */}
+      {/* Sticky container pins to the screen for 400vh */}
+      <div style={{
+        position: "sticky",
+        top: 0,
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}>
+        <div style={{ maxWidth: "1280px", width: "100%", margin: "0 auto", padding: "0 24px" }}>
+          
+          {/* Section header */}
           <div style={{
-            background: "#0A0A0A",
-            borderRight: "1px solid rgba(255,255,255,0.04)",
-            padding: "8px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2px",
-          }} role="tablist" aria-label="Feature tabs">
-            {FEATURES.map((f, i) => {
-              const isActive = active === i;
-              const isHov = hovered === i;
-              return (
-                <button
-                  key={f.id}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`panel-${f.id}`}
-                  onClick={() => setActive(i)}
-                  onMouseEnter={() => setHovered(i)}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{
-                    all: "unset",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    padding: "14px 16px",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                    background: isActive
-                      ? "rgba(124,58,237,0.10)"
-                      : isHov
-                      ? "rgba(255,255,255,0.025)"
-                      : "transparent",
-                    border: isActive
-                      ? "1px solid rgba(124,58,237,0.20)"
-                      : "1px solid transparent",
-                    transition: "all 0.22s cubic-bezier(0.16,1,0.3,1)",
-                    outline: "none",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* Active left bar */}
-                  {isActive && (
-                    <div style={{
-                      position: "absolute",
-                      left: 0, top: "20%", bottom: "20%",
-                      width: "2px",
-                      background: "linear-gradient(180deg, #7C3AED, #A78BFA)",
-                      borderRadius: "0 2px 2px 0",
-                    }} />
-                  )}
+            textAlign: "center",
+            marginBottom: "64px",
+          }}>
+            <span style={{
+              display: "inline-flex", alignItems: "center", gap: "7px",
+              padding: "4px 14px 4px 10px",
+              borderRadius: "9999px",
+              background: "rgba(124,58,237,0.08)",
+              border: "1px solid rgba(124,58,237,0.18)",
+              color: "#C4B5FD",
+              fontSize: "0.635rem",
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              fontFamily: "'Inter', sans-serif",
+              textTransform: "uppercase" as const,
+              marginBottom: "20px",
+            }}>
+              <span style={{
+                width: "4px", height: "4px", borderRadius: "50%",
+                background: "#A78BFA",
+                boxShadow: "0 0 8px rgba(167,139,250,0.9)",
+              }} />
+              Built for speed
+            </span>
 
-                  {/* Number */}
+            <h2 style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 900,
+              fontSize: "clamp(2rem, 3.5vw, 3rem)",
+              lineHeight: 1.08,
+              letterSpacing: "-0.04em",
+              color: "#f4f4f4",
+              marginBottom: "14px",
+            }}>
+              Every tool you need,{" "}
+              <span style={{
+                background: "linear-gradient(128deg, #EDE9FE 0%, #C4B5FD 25%, #A78BFA 55%, #7C3AED 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>nothing you don&apos;t.</span>
+            </h2>
+          </div>
+
+          {/* Main interactive panel */}
+          <div style={{
+            display: "flex",
+            alignItems: "stretch", // Stretch so both columns are exactly the same height
+            gap: "80px",
+            position: "relative",
+          }}>
+
+            {/* Scroll Indicator Dots - Centered relative to main content */}
+            <div style={{
+              position: "absolute",
+              left: "-32px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center", // Ensure dots are perfectly centered horizontally in their column
+              gap: "16px",
+              zIndex: 10,
+            }}>
+              {FEATURES.map((_, i) => (
+                <div 
+                  key={i}
+                  style={{
+                    width: "6px",
+                    height: i === active ? "32px" : "6px",
+                    borderRadius: "999px",
+                    backgroundColor: i === active ? "#A78BFA" : "rgba(255,255,255,0.15)",
+                    boxShadow: i === active ? "0 0 10px rgba(167,139,250,0.5)" : "none",
+                    transition: "all 0.8s cubic-bezier(0.22, 1, 0.36, 1)", // Match the text transition!
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Left Column: Crossfading text block */}
+            <div style={{ flex: "1 1 40%", position: "relative", display: "flex", alignItems: "center" }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active}
+                  initial={{
+                    opacity: 0,
+                    y: 120,
+                    position: "absolute",
+                    width: "100%",
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    position: "relative",
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: -120,
+                    position: "absolute",
+                    width: "100%",
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={{ width: "100%" }}
+                >
                   <span style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: "0.6rem",
-                    color: isActive ? "rgba(167,139,250,0.6)" : "rgba(255,255,255,0.15)",
-                    minWidth: "16px",
-                    transition: "color 0.2s",
+                    display: "inline-flex", alignItems: "center", gap: "6px",
+                    padding: "3px 12px 3px 8px",
+                    borderRadius: "9999px",
+                    background: "rgba(124,58,237,0.12)",
+                    border: "1px solid rgba(124,58,237,0.25)",
+                    color: "#C4B5FD",
+                    fontSize: "0.55rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    fontFamily: "'Inter', sans-serif",
+                    textTransform: "uppercase" as const,
+                    marginBottom: "16px",
                   }}>
-                    {String(i + 1).padStart(2, "0")}
+                    {feat.tag}
                   </span>
 
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    {/* Tag */}
-                    <div style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "0.55rem",
-                      fontWeight: 500,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase" as const,
-                      color: isActive ? "rgba(167,139,250,0.55)" : "rgba(255,255,255,0.18)",
-                      marginBottom: "2px",
-                      transition: "color 0.2s",
-                    }}>
-                      {f.tag}
-                    </div>
-                    {/* Title */}
-                    <div style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "0.82rem",
-                      fontWeight: isActive ? 600 : 500,
-                      color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
-                      transition: "color 0.2s, font-weight 0.2s",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}>
-                      {f.title}
-                    </div>
-                  </div>
-
-                  {/* Arrow */}
-                  <span style={{
+                  <h2 style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: "0.75rem",
-                    color: isActive ? "rgba(167,139,250,0.6)" : "rgba(255,255,255,0.1)",
-                    transition: "all 0.2s",
-                    transform: isActive ? "translateX(0)" : "translateX(-4px)",
-                    opacity: isActive ? 1 : 0,
-                  }}>→</span>
-                </button>
-              );
-            })}
-          </div>
+                    fontWeight: 800,
+                    fontSize: "clamp(1.8rem, 3vw, 2.4rem)", // Kept smaller font size
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    color: "#fff",
+                    marginBottom: "16px",
+                  }}>
+                    {feat.headline}
+                  </h2>
 
-          {/* ── Detail panel ── */}
-          <div
-            id={`panel-${feat.id}`}
-            role="tabpanel"
-            ref={previewRef}
-            key={feat.id}
-            style={{
-              background: "#080808",
-              padding: "48px 52px",
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "52px",
-              alignItems: "center",
-              animation: "panelIn 0.35s cubic-bezier(0.16,1,0.3,1) both",
-            }}
-            className="feat-detail"
-          >
-            {/* Left: copy */}
-            <div>
-              {/* Stat */}
-              <div style={{ marginBottom: "28px" }}>
-                <div style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "clamp(2.4rem, 4vw, 3.4rem)",
-                  fontWeight: 900,
-                  letterSpacing: "-0.04em",
-                  background: "linear-gradient(128deg, #EDE9FE 0%, #A78BFA 60%, #7C3AED 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  lineHeight: 1,
-                  marginBottom: "4px",
-                }}>
-                  {feat.stat}
-                </div>
-                <div style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "0.7rem",
-                  color: "rgba(255,255,255,0.25)",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase" as const,
-                  fontWeight: 500,
-                }}>
-                  {feat.statLabel}
-                </div>
-              </div>
-
-              <h3 style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 800,
-                fontSize: "clamp(1.3rem, 2vw, 1.65rem)",
-                letterSpacing: "-0.03em",
-                color: "#f4f4f4",
-                lineHeight: 1.2,
-                marginBottom: "14px",
-              }}>
-                {feat.headline}
-              </h3>
-
-              <p style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "0.875rem",
-                color: "rgba(255,255,255,0.42)",
-                lineHeight: 1.75,
-                fontWeight: 400,
-                letterSpacing: "0.005em",
-                marginBottom: "32px",
-              }}>
-                {feat.desc}
-              </p>
-
-              <button
-                style={{
-                  all: "unset",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "0.78rem",
-                  fontWeight: 500,
-                  color: "#A78BFA",
-                  cursor: "pointer",
-                  letterSpacing: "0.01em",
-                  padding: "0",
-                  transition: "gap 0.2s ease",
-                  borderBottom: "1px solid rgba(167,139,250,0.25)",
-                  paddingBottom: "2px",
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.gap = "10px"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.gap = "6px"; }}
-              >
-                Learn more <span>→</span>
-              </button>
+                  <p style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "1rem", // Kept smaller font size
+                    color: "rgba(255,255,255,0.5)",
+                    lineHeight: 1.6,
+                    fontWeight: 400,
+                    maxWidth: "400px", // Kept less width
+                  }}>
+                    {feat.desc}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* Right: visual preview */}
+            {/* Right Column: Crossfading Preview Pane */}
             <div style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.05)",
-              borderRadius: "14px",
-              padding: "20px",
-              minHeight: "220px",
+              flex: "1 1 60%",
+              height: "50vh",
+              minHeight: "400px",
               position: "relative",
-              overflow: "hidden",
             }}>
-              {/* Corner accent */}
-              <div style={{
-                position: "absolute",
-                top: 0, right: 0,
-                width: "120px", height: "120px",
-                background: `radial-gradient(circle at top right, ${feat.accent}18, transparent 70%)`,
-                pointerEvents: "none",
-              }} />
-              {feat.preview}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -30, scale: 0.95, filter: "blur(4px)" }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}
+              >
+                <div style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                  borderRadius: "20px",
+                  padding: "24px",
+                  position: "absolute",
+                  top: 0, left: 0, right: 0, bottom: 0,
+                  overflow: "hidden",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                  display: "flex",
+                  flexDirection: "column",
+                }}>
+                  {/* Accent glow behind preview */}
+                  <div style={{
+                    position: "absolute",
+                    top: "-50%", right: "-50%",
+                    width: "200%", height: "200%",
+                    background: `radial-gradient(circle at center, ${feat.accent}15, transparent 60%)`,
+                    pointerEvents: "none",
+                  }} />
+                  {/* The actual preview component */}
+                  <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
+                    {feat.preview}
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
 
-        {/* ── Bottom mini-stats strip ── */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "1px",
-          background: "rgba(255,255,255,0.04)",
-          borderRadius: "14px",
-          overflow: "hidden",
-          border: "1px solid rgba(255,255,255,0.05)",
-          marginTop: "2px",
-          animation: "featIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both",
-        }} className="features-strip">
-          {[
-            { stat: "10,000+", label: "Sites launched" },
-            { stat: "< 5s", label: "Generation time" },
-            { stat: "99.99%", label: "Uptime SLA" },
-            { stat: "38 regions", label: "Edge deployment" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              style={{
-                background: "#090909",
-                padding: "22px 28px",
-                borderRight: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none",
-                transition: "background 0.2s ease",
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.04)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "#090909"; }}
-            >
-              <div style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "1.4rem",
-                fontWeight: 800,
-                letterSpacing: "-0.035em",
-                color: "#fff",
-                marginBottom: "4px",
-              }}>
-                {item.stat}
-              </div>
-              <div style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "0.7rem",
-                color: "rgba(255,255,255,0.25)",
-                fontWeight: 400,
-                letterSpacing: "0.02em",
-              }}>
-                {item.label}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
-
+      </div>
+      
       <style>{`
-        @keyframes featIn {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes panelIn {
-          from { opacity: 0; transform: translateX(8px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
         @keyframes blink {
           0%,100% { opacity: 1; }
           50% { opacity: 0; }
         }
-        @media (max-width: 900px) {
-          .features-panel {
-            grid-template-columns: 1fr !important;
-          }
-          .feat-detail {
-            grid-template-columns: 1fr !important;
-            padding: 32px 24px !important;
-            gap: 28px !important;
-          }
-          .features-strip {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-        @media (max-width: 560px) {
-          .features-strip {
-            grid-template-columns: 1fr !important;
-          }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </section>

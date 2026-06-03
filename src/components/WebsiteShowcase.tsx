@@ -12,21 +12,10 @@ function Chrome({ url }: { url: string }) {
     </div>
   );
 }
-function LightChrome({ url }: { url: string }) {
-  return (
-    <div style={{ background: "#f0f0f0", padding: "7px 12px", display: "flex", alignItems: "center", gap: "6px", borderBottom: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
-      {["#ff5f57", "#febc2e", "#28c840"].map(c => <span key={c} style={{ width: "6px", height: "6px", borderRadius: "50%", background: c, opacity: 0.9 }} />)}
-      <div style={{ flex: 1, marginLeft: "6px", background: "#fff", borderRadius: "4px", padding: "3px 8px", fontSize: "0.42rem", color: "#bbb", fontFamily: "'Inter',sans-serif", display: "flex", alignItems: "center", gap: "4px" }}>
-        <Globe size={7} style={{ opacity: 0.3 }} /> {url}
-      </div>
-    </div>
-  );
-}
 
-/* ═══ Card 1: Finance Dashboard — Light — Back Left ═══ */
+/* ═══ Card 1: Finance Dashboard — Dark — Back Left ═══ */
 function PortfolioCard() {
   const bars = [62, 45, 78, 55, 90, 67, 83, 49, 71, 88, 60, 95];
-  const sparkW = [30, 38, 28, 45, 35, 52, 42, 58, 48, 62, 54, 70];
 
   return (
     <div style={{
@@ -38,30 +27,30 @@ function PortfolioCard() {
       animation: "floatLeft 13s ease-in-out 1s infinite",
       pointerEvents: "none",
     }}>
-      <LightChrome url="app.finch.so/dashboard" />
+      <Chrome url="app.finch.so/dashboard" />
 
       {/* App shell */}
-      <div style={{ background: "#fafafa", display: "flex", height: "338px", fontFamily: "'Inter',sans-serif" }}>
+      <div style={{ background: "#0a0a0d", display: "flex", height: "338px", fontFamily: "'Inter',sans-serif" }}>
 
         {/* ── Sidebar ── */}
-        <div style={{ width: "38px", background: "#fff", borderRight: "1px solid #efefef", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "10px", gap: "1px", flexShrink: 0 }}>
+        <div style={{ width: "38px", background: "#121216", borderRight: "1px solid rgba(255,255,255,0.05)", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "10px", gap: "1px", flexShrink: 0 }}>
           {/* wordmark */}
-          <div style={{ width: "20px", height: "20px", borderRadius: "6px", background: "#18181b", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "8px" }}>
-            <span style={{ fontSize: "0.38rem", color: "#fff", fontWeight: 800, letterSpacing: "-0.03em" }}>F</span>
+          <div style={{ width: "20px", height: "20px", borderRadius: "6px", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "8px" }}>
+            <span style={{ fontSize: "0.38rem", color: "#000", fontWeight: 800, letterSpacing: "-0.03em" }}>F</span>
           </div>
           {/* nav icons as colored pills */}
           {[
-            { bg: "#18181b", active: true },
-            { bg: "#e4e4e7" },
-            { bg: "#e4e4e7" },
-            { bg: "#e4e4e7" },
-            { bg: "#e4e4e7" },
+            { bg: "#fff", active: true },
+            { bg: "rgba(255,255,255,0.15)" },
+            { bg: "rgba(255,255,255,0.15)" },
+            { bg: "rgba(255,255,255,0.15)" },
+            { bg: "rgba(255,255,255,0.15)" },
           ].map((n, i) => (
             <div key={i} style={{
               width: n.active ? "22px" : "18px",
               height: "6px",
               borderRadius: "3px",
-              background: n.active ? "#18181b" : "#f0f0f0",
+              background: n.active ? "#fff" : "rgba(255,255,255,0.1)",
               marginBottom: "5px",
               transition: "all 0.2s",
             }} />
@@ -74,13 +63,13 @@ function PortfolioCard() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
           {/* Top bar */}
-          <div style={{ padding: "7px 10px", borderBottom: "1px solid #efefef", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#fff" }}>
+          <div style={{ padding: "7px 10px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#121216" }}>
             <div>
-              <div style={{ fontSize: "0.44rem", fontWeight: 700, color: "#18181b", letterSpacing: "-0.02em" }}>Financials</div>
-              <div style={{ fontSize: "0.26rem", color: "#a1a1aa", marginTop: "0.5px" }}>November 2024</div>
+              <div style={{ fontSize: "0.44rem", fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "-0.02em" }}>Financials</div>
+              <div style={{ fontSize: "0.26rem", color: "rgba(255,255,255,0.4)", marginTop: "0.5px" }}>November 2024</div>
             </div>
             <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-              <div style={{ background: "#f4f4f5", border: "1px solid #e4e4e7", borderRadius: "4px", padding: "2px 6px", fontSize: "0.26rem", color: "#52525b", fontWeight: 500 }}>+ New</div>
+              <div style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", padding: "2px 6px", fontSize: "0.26rem", color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>+ New</div>
               <div style={{ width: "18px", height: "18px", borderRadius: "50%", background: "linear-gradient(135deg,#f97316,#fb923c)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontSize: "0.24rem", color: "#fff", fontWeight: 700 }}>MK</span>
               </div>
@@ -88,27 +77,27 @@ function PortfolioCard() {
           </div>
 
           {/* KPI row */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1px", background: "#efefef", borderBottom: "1px solid #efefef" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1px", background: "rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
             {[
               { label: "Revenue", value: "$84.2K", delta: "+14.3%", up: true },
               { label: "Expenses", value: "$31.7K", delta: "-3.1%", up: true },
               { label: "Net Margin", value: "62.3%", delta: "+4.8pp", up: true },
             ].map((k, i) => (
-              <div key={i} style={{ background: "#fff", padding: "6px 8px" }}>
-                <div style={{ fontSize: "0.22rem", color: "#a1a1aa", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "2px" }}>{k.label}</div>
-                <div style={{ fontSize: "0.52rem", fontWeight: 700, color: "#18181b", letterSpacing: "-0.03em" }}>{k.value}</div>
+              <div key={i} style={{ background: "#121216", padding: "6px 8px" }}>
+                <div style={{ fontSize: "0.22rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: "2px" }}>{k.label}</div>
+                <div style={{ fontSize: "0.52rem", fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "-0.03em" }}>{k.value}</div>
                 <div style={{ fontSize: "0.22rem", color: "#10b981", fontWeight: 600, marginTop: "1px" }}>{k.delta}</div>
               </div>
             ))}
           </div>
 
           {/* Revenue chart area */}
-          <div style={{ background: "#fff", padding: "7px 10px 5px", borderBottom: "1px solid #f4f4f5" }}>
+          <div style={{ background: "#121216", padding: "7px 10px 5px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-              <span style={{ fontSize: "0.28rem", fontWeight: 600, color: "#3f3f46" }}>Monthly Revenue</span>
+              <span style={{ fontSize: "0.28rem", fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>Monthly Revenue</span>
               <div style={{ display: "flex", gap: "3px" }}>
                 {["1M","3M","YTD","1Y"].map((t,i) => (
-                  <span key={t} style={{ fontSize: "0.22rem", padding: "1px 4px", borderRadius: "3px", background: i===2 ? "#18181b" : "transparent", color: i===2 ? "#fff" : "#a1a1aa", fontWeight: 500 }}>{t}</span>
+                  <span key={t} style={{ fontSize: "0.22rem", padding: "1px 4px", borderRadius: "3px", background: i===2 ? "rgba(255,255,255,0.1)" : "transparent", color: i===2 ? "#fff" : "rgba(255,255,255,0.4)", fontWeight: 500 }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -119,7 +108,7 @@ function PortfolioCard() {
                   <div style={{
                     width: "100%", height: `${h * 0.36}px`,
                     borderRadius: "2px 2px 0 0",
-                    background: i === 10 ? "#6366f1" : i === 11 ? "rgba(99,102,241,0.25)" : "#e4e4e7",
+                    background: i === 10 ? "#6366f1" : i === 11 ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.1)",
                   }} />
                 </div>
               ))}
@@ -127,19 +116,19 @@ function PortfolioCard() {
             {/* x-axis labels */}
             <div style={{ display: "flex", gap: "2px", marginTop: "2px" }}>
               {["J","F","M","A","M","J","J","A","S","O","N","D"].map((m, i) => (
-                <div key={i} style={{ flex: 1, textAlign: "center" as const, fontSize: "0.20rem", color: i === 10 ? "#6366f1" : "#d4d4d8", fontWeight: i===10 ? 700 : 400 }}>{m}</div>
+                <div key={i} style={{ flex: 1, textAlign: "center" as const, fontSize: "0.20rem", color: i === 10 ? "#6366f1" : "rgba(255,255,255,0.3)", fontWeight: i===10 ? 700 : 400 }}>{m}</div>
               ))}
             </div>
           </div>
 
           {/* Transactions list */}
-          <div style={{ background: "#fff", flex: 1, overflow: "hidden", padding: "5px 0 0" }}>
+          <div style={{ background: "#121216", flex: 1, overflow: "hidden", padding: "5px 0 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 10px 4px" }}>
-              <span style={{ fontSize: "0.28rem", fontWeight: 600, color: "#3f3f46" }}>Recent Transactions</span>
+              <span style={{ fontSize: "0.28rem", fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>Recent Transactions</span>
               <span style={{ fontSize: "0.24rem", color: "#6366f1", fontWeight: 500 }}>View all →</span>
             </div>
             {[
-              { name: "Vercel Inc.", cat: "Infrastructure", amt: "-$240.00", time: "2h ago", avatar: "#18181b", letter: "V", badge: "Infra" },
+              { name: "Vercel Inc.", cat: "Infrastructure", amt: "-$240.00", time: "2h ago", avatar: "#222", letter: "V", badge: "Infra" },
               { name: "Stripe Payout", cat: "Revenue", amt: "+$12,400", time: "4h ago", avatar: "#635bff", letter: "S", badge: "Income" },
               { name: "Figma", cat: "Design • SaaS", amt: "-$75.00", time: "1d ago", avatar: "#f97316", letter: "F", badge: "Tools" },
               { name: "AWS", cat: "Cloud • Monthly", amt: "-$1,832", time: "2d ago", avatar: "#f59e0b", letter: "A", badge: "Infra" },
@@ -148,19 +137,18 @@ function PortfolioCard() {
               <div key={i} style={{
                 display: "flex", alignItems: "center", gap: "6px",
                 padding: "4px 10px",
-                borderBottom: "1px solid #fafafa",
-                background: "#fff",
+                borderBottom: "1px solid rgba(255,255,255,0.02)",
               }}>
                 <div style={{ width: "18px", height: "18px", borderRadius: "5px", background: tx.avatar, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ fontSize: "0.26rem", color: "#fff", fontWeight: 700 }}>{tx.letter}</span>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: "0.28rem", fontWeight: 600, color: "#18181b", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{tx.name}</div>
-                  <div style={{ fontSize: "0.22rem", color: "#a1a1aa" }}>{tx.cat}</div>
+                  <div style={{ fontSize: "0.28rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{tx.name}</div>
+                  <div style={{ fontSize: "0.22rem", color: "rgba(255,255,255,0.4)" }}>{tx.cat}</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }}>
-                  <span style={{ fontSize: "0.28rem", fontWeight: 700, color: tx.amt.startsWith("+") ? "#10b981" : "#18181b" }}>{tx.amt}</span>
-                  <span style={{ fontSize: "0.20rem", color: "#d4d4d8" }}>{tx.time}</span>
+                  <span style={{ fontSize: "0.28rem", fontWeight: 700, color: tx.amt.startsWith("+") ? "#10b981" : "rgba(255,255,255,0.9)" }}>{tx.amt}</span>
+                  <span style={{ fontSize: "0.20rem", color: "rgba(255,255,255,0.3)" }}>{tx.time}</span>
                 </div>
               </div>
             ))}
@@ -336,22 +324,7 @@ export default function WebsiteShowcase() {
         <PortfolioCard />
         <AgencyCard />
         <SaasCard />
-        {/* Bottom indicator */}
-        <div style={{
-          position: "absolute", bottom: "10px", left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex", alignItems: "center", gap: "7px",
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.05)",
-          borderRadius: "20px", padding: "5px 15px",
-          zIndex: 20, whiteSpace: "nowrap",
-          backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-        }}>
-          <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#10B981", boxShadow: "0 0 7px rgba(16,185,129,0.5)", display: "inline-block" }} />
-          <span style={{ fontSize: "0.52rem", color: "rgba(110,231,183,0.42)", fontWeight: 450, fontFamily: "'Inter',sans-serif", letterSpacing: "0.02em" }}>
-            AI-generated · {"<"}5s
-          </span>
-        </div>
+
       </div>
       <style>{`
         @keyframes floatFront {

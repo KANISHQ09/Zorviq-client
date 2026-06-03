@@ -3,23 +3,16 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Check } from "lucide-react";
 import WebsiteShowcase from "@/components/WebsiteShowcase";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/i18n";
 
 /* ─── Data ─────────────────────────────────────────── */
 const PROMPTS = [
   "Create a portfolio for a motion designer",
-  "Build a coffee shop website with online ordering",
-  "SaaS landing page for an AI productivity tool",
-  "Personal brand site for a freelance developer",
+  "Coffee shop website with online ordering",
+  "Landing page for an AI productivity tool",
+  "Personal site for a freelance developer",
   "E-commerce store for handmade ceramics",
-];
-
-const CHIPS = [
-  { label: "Portfolio site", icon: "✦" },
-  { label: "Coffee shop", icon: "☕" },
-  { label: "SaaS landing", icon: "⚡" },
-  { label: "Personal brand", icon: "🎯" },
 ];
 
 const GEN_STEPS = [
@@ -42,13 +35,14 @@ export default function Hero() {
   const [inputVal, setInputVal] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStep, setGenStep] = useState(-1);
-  const [chipHover, setChipHover] = useState<number | null>(null);
+
   const [promptHover, setPromptHover] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const typingRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── Typewriter ─────────────────────────────────── */
   useEffect(() => {
-    if (inputVal) return;
+    if (inputVal || isFocused) return;
     const target = PROMPTS[promptIdx];
     if (typing) {
       if (displayed.length < target.length) {
@@ -71,25 +65,8 @@ export default function Hero() {
       }
     }
     return () => { if (typingRef.current) clearTimeout(typingRef.current); };
-  }, [displayed, typing, promptIdx, inputVal]);
+  }, [displayed, typing, promptIdx, inputVal, isFocused]);
 
-  /* ── Chip click → generate sequence ────────────── */
-  const handleChipClick = useCallback((label: string) => {
-    setInputVal(label);
-    setIsGenerating(true);
-    setGenStep(0);
-    let step = 0;
-    const advance = () => {
-      step++;
-      if (step < GEN_STEPS.length) {
-        setGenStep(step);
-        setTimeout(advance, 600);
-      } else {
-        setTimeout(() => { setIsGenerating(false); setGenStep(-1); }, 1400);
-      }
-    };
-    setTimeout(advance, 600);
-  }, []);
 
   /* ── Three.js wave grid — +25% visibility ───────── */
   useEffect(() => {
@@ -164,10 +141,12 @@ export default function Hero() {
 
     const onResize = () => {
       const canvas = canvasRef.current;
-      if (!canvas || !renderer) return;
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      if (!canvas || !renderer || !camera) return;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.setSize(w, h, false);
     };
     const onMouse = (e: MouseEvent) => {
       mouseRef.current = {
@@ -176,10 +155,15 @@ export default function Hero() {
       };
     };
     init();
+    // ResizeObserver watches the canvas element directly so we react to
+    // ANY size change (fullscreen, sidebar open, font scaling, etc.)
+    const ro = new ResizeObserver(onResize);
+    if (canvasRef.current) ro.observe(canvasRef.current);
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouse);
     return () => {
       cancelAnimationFrame(animRef.current);
+      ro.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouse);
       renderer?.dispose();
@@ -189,7 +173,8 @@ export default function Hero() {
   return (
     <section style={{
       position: "relative",
-      minHeight: "100vh",
+      height: "100vh",
+      minHeight: "600px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -314,7 +299,8 @@ export default function Hero() {
 
           {/* ── Prompt input ── */}
           <div style={{
-            maxWidth: "520px",
+            width: "100%",
+            maxWidth: "680px",
             marginBottom: "20px",
             position: "relative",
             animation: "heroIn 1s cubic-bezier(0.16,1,0.3,1) 0.24s both",
@@ -334,16 +320,7 @@ export default function Hero() {
               transition: "all 0.7s ease",
               zIndex: 0,
             }} />
-            {/* Rotating border glow */}
-            <div style={{
-              position: "absolute", inset: "-1px", borderRadius: "14px",
-              background: promptHover
-                ? "conic-gradient(from 0deg, transparent 30%, rgba(124,58,237,0.55) 52%, rgba(167,139,250,0.35) 68%, transparent 83%)"
-                : "conic-gradient(from 0deg, transparent 52%, rgba(124,58,237,0.28) 70%, transparent 87%)",
-              animation: "spinGlow 8s linear infinite",
-              zIndex: 0,
-              transition: "all 0.6s ease",
-            }} />
+
             <div
               onMouseEnter={() => setPromptHover(true)}
               onMouseLeave={() => setPromptHover(false)}
@@ -369,32 +346,59 @@ export default function Hero() {
                 flexShrink: 0, opacity: 0.75,
                 transition: "all 0.3s ease",
               }} />
-              <span style={{
-                flex: 1, fontSize: "0.84rem",
-                color: "rgba(255,255,255,0.30)",
-                fontFamily: "'JetBrains Mono', monospace",
-                fontWeight: 400,
-                padding: "11px 16px",
-                whiteSpace: "nowrap", overflow: "hidden",
-                letterSpacing: "0.01em",
-              }}>
-                {inputVal || displayed}
-                {!inputVal && (
-                  <span style={{
-                    display: "inline-block", width: "1.5px", height: "13px",
-                    background: "#7C3AED", marginLeft: "1px", verticalAlign: "middle",
-                    animation: "blink 1s step-end infinite",
-                    opacity: 0.85,
-                  }} />
+              <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center", padding: "0 16px", overflow: "hidden" }}>
+                <input
+                  value={inputVal}
+                  onChange={(e) => setInputVal(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "rgba(255,255,255,0.9)",
+                    fontSize: "0.84rem",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    letterSpacing: "0.01em",
+                    position: "relative",
+                    zIndex: 2,
+                  }}
+                  placeholder={isFocused ? "Describe your project..." : ""}
+                />
+                {(!inputVal && !isFocused) && (
+                  <div style={{
+                    position: "absolute",
+                    left: "16px",
+                    top: 0,
+                    bottom: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    pointerEvents: "none",
+                    color: "rgba(255,255,255,0.30)",
+                    fontSize: "0.84rem",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    letterSpacing: "0.01em",
+                    whiteSpace: "nowrap",
+                    zIndex: 1,
+                  }}>
+                    {displayed}
+                    <span style={{
+                      display: "inline-block", width: "1.5px", height: "14px",
+                      background: "#7C3AED", marginLeft: "3px",
+                      animation: "blink 1s step-end infinite",
+                      opacity: 0.85,
+                    }} />
+                  </div>
                 )}
-              </span>
+              </div>
               <Link href="/signup" style={{
-                display: "inline-flex", alignItems: "center", gap: "6px",
+                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px",
                 background: "linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)",
                 color: "#fff", textDecoration: "none",
                 fontSize: "0.78rem", fontWeight: 500,
                 fontFamily: "'Inter', sans-serif",
-                padding: "11px 22px", borderRadius: "9px",
+                height: "38px", padding: "0 22px", borderRadius: "9px",
                 whiteSpace: "nowrap", flexShrink: 0,
                 transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
                 boxShadow: "0 1px 0 rgba(255,255,255,0.10) inset, 0 0 20px rgba(124,58,237,0.22)",
@@ -412,80 +416,6 @@ export default function Hero() {
                 {t("hero.cta_primary")} <ArrowRight size={13} strokeWidth={2} />
               </Link>
             </div>
-          </div>
-
-          {/* ── Prompt chips ── */}
-          <div style={{
-            display: "flex", gap: "7px", flexWrap: "wrap", alignItems: "center",
-            marginBottom: "36px",
-            animation: "heroIn 1s cubic-bezier(0.16,1,0.3,1) 0.32s both",
-          }}>
-            <span style={{
-              fontSize: "0.67rem",
-              color: "rgba(255,255,255,0.24)",
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 450,
-              marginRight: "2px",
-              letterSpacing: "0.02em",
-            }}>Try:</span>
-            {CHIPS.map((chip, i) => (
-              <button
-                key={chip.label}
-                onClick={() => handleChipClick(chip.label)}
-                onMouseEnter={() => setChipHover(i)}
-                onMouseLeave={() => setChipHover(null)}
-                style={{
-                  background: chipHover === i
-                    ? "rgba(124,58,237,0.12)"
-                    : "rgba(255,255,255,0.035)",
-                  border: chipHover === i
-                    ? "1px solid rgba(124,58,237,0.32)"
-                    : "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "8px",
-                  padding: "6px 13px",
-                  fontSize: "0.71rem",
-                  color: chipHover === i ? "#D4C5FE" : "rgba(255,255,255,0.36)",
-                  cursor: "pointer",
-                  transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
-                  fontWeight: 450,
-                  fontFamily: "'Inter', sans-serif",
-                  display: "inline-flex", alignItems: "center", gap: "5px",
-                  transform: chipHover === i ? "translateY(-1.5px)" : "none",
-                  letterSpacing: "0.008em",
-                  boxShadow: chipHover === i ? "0 6px 20px rgba(124,58,237,0.16), 0 0 0 1px rgba(124,58,237,0.06)" : "none",
-                }}
-              >
-                <span style={{ fontSize: "0.64rem", opacity: chipHover === i ? 1 : 0.65 }}>{chip.icon}</span>
-                {chip.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Credibility signals */}
-          <div style={{
-            display: "flex", gap: "20px", alignItems: "center",
-            animation: "heroIn 1s cubic-bezier(0.16,1,0.3,1) 0.38s both",
-          }}>
-            {[
-              { label: "React & Next.js" },
-              { label: "Production-ready" },
-              { label: "Deploy in seconds" },
-            ].map((item) => (
-              <span key={item.label} style={{
-                display: "inline-flex", alignItems: "center", gap: "5px",
-                fontSize: "0.665rem",
-                color: "rgba(255,255,255,0.22)",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                letterSpacing: "0.02em",
-              }}>
-                <span style={{
-                  width: "3px", height: "3px", borderRadius: "50%",
-                  background: "rgba(167,139,250,0.5)", flexShrink: 0,
-                }} />
-                {item.label}
-              </span>
-            ))}
           </div>
 
           {/* ── AI Generation progress ── */}
@@ -575,8 +505,6 @@ export default function Hero() {
           )}
         </div>
 
-
-
         {/* ── Right: Website Showcase ── */}
         <WebsiteShowcase />
 
@@ -589,10 +517,6 @@ export default function Hero() {
           to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes spinGlow {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
