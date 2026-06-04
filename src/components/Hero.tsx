@@ -60,8 +60,10 @@ export default function Hero() {
           18
         );
       } else {
-        setPromptIdx((i) => (i + 1) % PROMPTS.length);
-        setTyping(true);
+        typingRef.current = setTimeout(() => {
+          setPromptIdx((i) => (i + 1) % PROMPTS.length);
+          setTyping(true);
+        }, 50);
       }
     }
     return () => { if (typingRef.current) clearTimeout(typingRef.current); };

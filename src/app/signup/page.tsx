@@ -76,7 +76,7 @@ export default function SignUpPage() {
             </div>
           ))}
 
-          <button style={{
+          <Link href="/dashboard" style={{
             width: "100%", padding: "13px",
             background: "linear-gradient(135deg,#7C3AED,#6366F1)",
             border: "none", borderRadius: "10px",
@@ -84,12 +84,13 @@ export default function SignUpPage() {
             cursor: "pointer", marginTop: "8px",
             boxShadow: "0 0 24px rgba(124,58,237,0.3)",
             transition: "all 0.2s",
+            display: "block", textAlign: "center", textDecoration: "none"
           }}
           onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 40px rgba(124,58,237,0.6)")}
           onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 24px rgba(124,58,237,0.3)")}
           >
             Create Account →
-          </button>
+          </Link>
 
           <p style={{ textAlign: "center", fontSize: "0.8rem", color: "#444", marginTop: "20px" }}>
             Already have an account?{" "}

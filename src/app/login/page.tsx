@@ -64,15 +64,16 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <button style={{
+          <Link href="/dashboard" style={{
             width: "100%", padding: "13px",
             background: "linear-gradient(135deg,#7C3AED,#6366F1)",
             border: "none", borderRadius: "10px",
             color: "#fff", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
             boxShadow: "0 0 24px rgba(124,58,237,0.3)",
+            display: "block", textAlign: "center", textDecoration: "none"
           }}>
             Sign In →
-          </button>
+          </Link>
 
           <p style={{ textAlign: "center", fontSize: "0.8rem", color: "#444", marginTop: "20px" }}>
             Don&apos;t have an account?{" "}
