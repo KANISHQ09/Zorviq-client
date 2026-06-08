@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function AIBuildDemo() {
+function AIBuildDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10">
 
@@ -194,7 +194,7 @@ export function AIBuildDemo() {
   );
 }
 
-export function AICopyDemo() {
+function AICopyDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(109,40,217,0.15),transparent_70%)]" />
@@ -238,7 +238,7 @@ export function AICopyDemo() {
   );
 }
 
-export function DesignSystemDemo() {
+function DesignSystemDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(59,130,246,0.15),transparent_70%)]" />
@@ -285,7 +285,7 @@ export function DesignSystemDemo() {
   );
 }
 
-export function DeployDemo() {
+function DeployDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 flex flex-col p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.1),transparent_70%)]" />
@@ -328,7 +328,7 @@ export function DeployDemo() {
   );
 }
 
-export function FigmaDemo() {
+function FigmaDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 p-6 flex flex-col">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(242,78,30,0.15),transparent_70%)]" />
@@ -373,7 +373,7 @@ export function FigmaDemo() {
   );
 }
 
-export function AnimationDemo() {
+function AnimationDemo() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#070707] border border-white/10 p-6 flex flex-col">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(167,139,250,0.15),transparent_70%)]" />

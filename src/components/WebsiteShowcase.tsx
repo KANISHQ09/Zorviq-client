@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Globe } from "lucide-react";
 
 /* ── Browser Chrome ── */
@@ -25,7 +26,15 @@ function PortfolioCard() {
       background: "#fff",
     }}>
       <Chrome url="forma-interiors.com" />
-      <img src="/templates/img1.jpg" alt="Forma Interiors Template" style={{ width: "100%", height: "260px", objectFit: "cover", objectPosition: "top", display: "block" }} />
+      <Image
+        src="/templates/img1.jpg"
+        alt="AI-generated Forma Interiors website template preview"
+        width={1024}
+        height={682}
+        sizes="420px"
+        priority
+        style={{ width: "100%", height: "260px", objectFit: "cover", objectPosition: "top", display: "block" }}
+      />
     </div>
   );
 }
@@ -41,7 +50,15 @@ function SaasCard() {
       background: "#fff",
     }}>
       <Chrome url="gigi-energy.com" />
-      <img src="/templates/img5.jpg" alt="GiGi Energy Template" style={{ width: "100%", height: "320px", objectFit: "cover", objectPosition: "top", display: "block" }} />
+      <Image
+        src="/templates/img5.jpg"
+        alt="AI-generated GiGi Energy website template preview"
+        width={1024}
+        height={682}
+        sizes="460px"
+        priority
+        style={{ width: "100%", height: "320px", objectFit: "cover", objectPosition: "top", display: "block" }}
+      />
     </div>
   );
 }
@@ -58,7 +75,15 @@ function AgencyCard() {
       background: "#fff",
     }}>
       <Chrome url="destin-adventures.com" />
-      <img src="/templates/img4.jpg" alt="Destin Adventures Template" style={{ width: "100%", height: "260px", objectFit: "cover", objectPosition: "top", display: "block" }} />
+      <Image
+        src="/templates/img4.jpg"
+        alt="AI-generated Destin Adventures website template preview"
+        width={1024}
+        height={682}
+        sizes="420px"
+        priority
+        style={{ width: "100%", height: "260px", objectFit: "cover", objectPosition: "top", display: "block" }}
+      />
     </div>
   );
 }

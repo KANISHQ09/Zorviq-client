@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useCallback, useState } from "react";
+import Image from "next/image";
 import { clsx, type ClassValue } from "clsx";
 
 function cn(...inputs: ClassValue[]) {
@@ -10,7 +11,7 @@ function cn(...inputs: ClassValue[]) {
 const testimonials = [
   {
     id: 1,
-    quote: "This changed everything for me.",
+    quote: "Zorviq helped us launch a polished AI-generated landing page before our sprint review.",
     author: "Sarah Chen",
     role: "Designer at Figma",
     avatar:
@@ -18,7 +19,7 @@ const testimonials = [
   },
   {
     id: 2,
-    quote: "Simply brilliant. Nothing else compares.",
+    quote: "The no-code website workflow feels fast enough for experiments and polished enough for production.",
     author: "Marcus Johnson",
     role: "Engineer at Vercel",
     avatar:
@@ -26,7 +27,7 @@ const testimonials = [
   },
   {
     id: 3,
-    quote: "The attention to detail is unmatched.",
+    quote: "We moved from blank-page planning to a working website preview in minutes.",
     author: "Elena Rodriguez",
     role: "Founder at Craft",
     avatar:
@@ -39,9 +40,8 @@ export default function Testimonials() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [displayedQuote, setDisplayedQuote] = useState(testimonials[0].quote);
   const [displayedRole, setDisplayedRole] = useState(testimonials[0].role);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const handleSelect = (index: number) => {
+  const handleSelect = useCallback((index: number) => {
     if (index === activeIndex || isAnimating) return;
 
     setIsAnimating(true);
@@ -55,10 +55,11 @@ export default function Testimonials() {
         setIsAnimating(false);
       }, 300);
     }, 200);
-  };
+  }, [activeIndex, isAnimating]);
 
   return (
     <section
+      id="community"
       aria-labelledby="testimonials-heading"
       className="min-h-screen flex items-center justify-center py-20"
     >
@@ -106,8 +107,7 @@ export default function Testimonials() {
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg md:text-xl leading-relaxed text-neutral-400 text-center">
-            Discover how thousands of teams streamline their operations and
-            build faster with our platform.
+            See how founders, designers, and marketers use Zorviq to create AI-generated websites faster.
           </p>
         </div>
 
@@ -181,9 +181,12 @@ export default function Testimonials() {
                       isActive ? "scale-110" : "hover:scale-105 opacity-70 hover:opacity-100"
                     )}
                   >
-                    <img
+                    <Image
                       src={testimonial.avatar}
-                      alt={testimonial.author}
+                      alt={`${testimonial.author}, Zorviq AI website builder customer`}
+                      width={64}
+                      height={64}
+                      sizes="64px"
                       className={cn(
                         "w-14 h-14 md:w-16 md:h-16 rounded-full object-cover transition-all duration-300",
                         isActive

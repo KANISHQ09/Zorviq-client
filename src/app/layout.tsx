@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
+import { AppProviders } from "./providers";
+import {
+  absoluteUrl,
+  createMetadata,
+  jsonLd,
+  organizationJsonLd,
+  siteConfig,
+  softwareJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Zorviq — AI Website Builder | Build Stunning Websites in Seconds",
-  description:
-    "Zorviq is the AI-powered website builder that turns your ideas into stunning websites in seconds. No code. No limits. Just pure creation.",
-  keywords: [
-    "AI website builder",
-    "no-code",
-    "website generator",
-    "AI design",
-    "Zorviq",
-  ],
-  openGraph: {
-    title: "Zorviq — AI Website Builder",
-    description:
-      "Build stunning websites with AI in seconds. Describe your idea and watch it come to life.",
-    type: "website",
+  ...createMetadata({
+    title: "Zorviq | AI Website Builder for No-Code Websites",
+    description: siteConfig.description,
+    path: "/",
+  }),
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: "AI website builder",
+  icons: {
+    icon: "/favicon.ico",
   },
+  manifest: absoluteUrl("/manifest.webmanifest"),
 };
 
 export default function RootLayout({
@@ -35,7 +43,15 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLd([organizationJsonLd, websiteJsonLd, softwareJsonLd]),
+          }}
+        />
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

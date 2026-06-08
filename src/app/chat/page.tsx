@@ -2,15 +2,12 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  API_BASE_URL,
-  Project,
-  authStore,
-  enqueueGeneration,
-  getGenerationStatus,
-  getProject,
-  updateProject,
-} from "@/lib/api";
+import { Check, Copy } from "lucide-react";
+import { authStore } from "@/lib/api";
+import { useUpdateProject } from "@/react-query-config/mutations/use-project-mutations";
+import { useProject } from "@/react-query-config/queries/use-project-queries";
+import { generationService } from "@/services/generation.service";
+import { ZorviqLoadingBar } from "@/shared/components/zorviq-loading-bar";
 
 interface Message {
   id: string;
@@ -45,20 +42,38 @@ const defaultCode = `<!doctype html>
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#060606", color: "#888" }}>Loading chat...</div>}>
-      <ChatContent />
+    <Suspense
+      fallback={
+        <ZorviqLoadingBar
+          variant="page"
+          label="Loading chat"
+          detail="Opening your AI website editor"
+        />
+      }
+    >
+      <ChatRoute />
     </Suspense>
   );
 }
 
-function ChatContent() {
-  const router = useRouter();
+function ChatRoute() {
   const searchParams = useSearchParams();
   const queryProjectId = searchParams.get("id");
+
+  return <ChatContent key={queryProjectId ?? "missing-project"} queryProjectId={queryProjectId} />;
+}
+
+function ChatContent({ queryProjectId }: { queryProjectId: string | null }) {
+  const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const streamRef = useRef<EventSource | null>(null);
+  const {
+    data: project,
+    isError: isProjectError,
+    isLoading: isProjectLoading,
+  } = useProject(queryProjectId);
+  const updateProject = useUpdateProject();
 
-  const [project, setProject] = useState<Project | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isWorking, setIsWorking] = useState(false);
@@ -66,65 +81,65 @@ function ChatContent() {
   const [generatedCode, setGeneratedCode] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("preview");
   const [error, setError] = useState("");
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const projectId = project?._id;
-  const previewHtml = useMemo(() => generatedCode || defaultCode, [generatedCode]);
+  const storedCode = project?.currentCode ?? "";
+  const activeCode = generatedCode || storedCode;
+  const hasCopiedActiveCode = Boolean(activeCode) && copiedCode === activeCode;
+  const previewHtml = useMemo(() => activeCode || defaultCode, [activeCode]);
+  const visibleMessages = useMemo<Message[]>(() => {
+    if (messages.length > 0) return messages;
+    if (!project) return [];
+
+    return [
+      {
+        id: "project-loaded",
+        role: "assistant",
+        content: storedCode
+          ? "Loaded the latest generated code for this project."
+          : "Project is ready. Send a prompt to generate the first version.",
+        time: now(),
+      },
+    ];
+  }, [messages, project, storedCode]);
 
   useEffect(() => {
-    let alive = true;
-
-    const load = async () => {
-      try {
-        if (!queryProjectId) {
-          router.replace("/dashboard");
-          return;
-        }
-
-        const activeProject = await getProject(queryProjectId);
-        if (!alive) return;
-
-        setProject(activeProject);
-        setGeneratedCode(activeProject.currentCode ?? "");
-        setMessages([
-          {
-            id: "project-loaded",
-            role: "assistant",
-            content: activeProject.currentCode
-              ? "Loaded the latest generated code for this project."
-              : "Project is ready. Send a prompt to generate the first version.",
-            time: now(),
-          },
-        ]);
-      } catch {
-        authStore.clear();
-        router.replace("/login");
-      }
-    };
-
-    load();
     return () => {
-      alive = false;
       streamRef.current?.close();
     };
+  }, []);
+
+  useEffect(() => {
+    if (queryProjectId) return;
+    router.replace("/dashboard");
   }, [queryProjectId, router]);
 
   useEffect(() => {
+    if (!isProjectError) return;
+    authStore.clear();
+    router.replace("/login");
+  }, [isProjectError, router]);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isWorking]);
+  }, [visibleMessages, isWorking]);
 
   const finishGeneration = async (code: string, jobId: string) => {
     let finalCode = code;
 
     if (!finalCode.trim()) {
-      const status = await getGenerationStatus(jobId);
+      const status = await generationService.status(jobId);
       finalCode = status.output ?? "";
     }
 
     if (finalCode.trim()) {
       setGeneratedCode(finalCode);
       if (projectId) {
-        const updated = await updateProject(projectId, { currentCode: finalCode });
-        setProject(updated);
+        await updateProject.mutateAsync({
+          id: projectId,
+          payload: { currentCode: finalCode },
+        });
       }
     }
 
@@ -146,7 +161,7 @@ function ChatContent() {
 
   const streamGeneration = (jobId: string) => {
     let output = "";
-    const source = new EventSource(`${API_BASE_URL}/api/generate/stream/${jobId}`, {
+    const source = new EventSource(generationService.streamUrl(jobId), {
       withCredentials: true,
     });
     streamRef.current = source;
@@ -182,7 +197,7 @@ function ChatContent() {
       source.close();
       try {
         setWorkingStatus("Checking generation status");
-        const status = await getGenerationStatus(jobId);
+        const status = await generationService.status(jobId);
         if (status.status === "done") {
           await finishGeneration(status.output ?? output, jobId);
           return;
@@ -210,7 +225,7 @@ function ChatContent() {
     setWorkingStatus("Queueing generation");
 
     try {
-      const result = await enqueueGeneration(projectId, content);
+      const result = await generationService.enqueue(projectId, content);
       if (result.status === "done" && result.code) {
         await finishGeneration(result.code, result.jobId);
         return;
@@ -248,7 +263,7 @@ function ChatContent() {
   };
 
   const downloadCode = () => {
-    const blob = new Blob([generatedCode || previewHtml], { type: "text/html" });
+    const blob = new Blob([activeCode || previewHtml], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -256,6 +271,28 @@ function ChatContent() {
     link.click();
     URL.revokeObjectURL(url);
   };
+
+  const copyCode = async () => {
+    if (!activeCode.trim()) return;
+
+    try {
+      await navigator.clipboard.writeText(activeCode);
+      setCopiedCode(activeCode);
+      setError("");
+    } catch {
+      setError("Could not copy the code. Please try again.");
+    }
+  };
+
+  if (isProjectLoading) {
+    return (
+      <ZorviqLoadingBar
+        variant="page"
+        label="Loading project"
+        detail="Preparing the latest generated website"
+      />
+    );
+  }
 
   return (
     <div className="chat-root">
@@ -268,7 +305,7 @@ function ChatContent() {
         </header>
 
         <div className="messages-area">
-          {messages.map((msg) => (
+          {visibleMessages.map((msg) => (
             <div key={msg.id} className={`message ${msg.role}`}>
               {msg.role === "assistant" && <div className="msg-avatar assistant-avatar">Z</div>}
               <div className="msg-bubble">
@@ -313,7 +350,12 @@ function ChatContent() {
               </div>
               <div className="input-right">
                 <span className="build-badge">Build</span>
-                <button className={`send-btn ${isWorking ? "stop" : ""}`} onClick={() => isWorking ? stopGeneration() : handleSend()}>
+                <button
+                  className={`send-btn ${isWorking ? "stop" : ""}`}
+                  aria-label={isWorking ? "Stop generation" : "Send prompt"}
+                  title={isWorking ? "Stop generation" : "Send prompt"}
+                  onClick={() => isWorking ? stopGeneration() : handleSend()}
+                >
                   {isWorking ? "■" : "↑"}
                 </button>
               </div>
@@ -341,54 +383,193 @@ function ChatContent() {
               sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-scripts"
             />
           ) : (
-            <pre className="code-view">{generatedCode || "Generated code will appear here."}</pre>
+            <div className="code-shell">
+              <button
+                className="copy-code-btn"
+                type="button"
+                onClick={copyCode}
+                disabled={!activeCode.trim()}
+                aria-label="Copy current code"
+                title="Copy current code"
+              >
+                {hasCopiedActiveCode ? <Check size={14} /> : <Copy size={14} />}
+                {hasCopiedActiveCode ? "Copied" : "Copy"}
+              </button>
+              <pre className="code-view">{activeCode || "Generated code will appear here."}</pre>
+            </div>
           )}
         </div>
       </div>
 
       <style jsx>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .chat-root { display: flex; height: 100vh; background: #060606; color: #e5e5e5; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
-        .chat-panel { width: 400px; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid rgba(255,255,255,0.05); background: #060606; flex-shrink: 0; }
-        .chat-header, .preview-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); background: #0A0A0A; }
-        .chat-header-title { font-size: 14px; font-weight: 600; color: #e5e5e5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; display: block; }
-        .back-btn { font-size: 13px; color: #888; background: transparent; border: none; cursor: pointer; padding: 4px 0; white-space: nowrap; }
-        .back-btn:hover { color: #fff; }
-        .messages-area { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
+        .chat-root {
+          display: flex;
+          height: 100vh;
+          background:
+            radial-gradient(ellipse 60% 40% at 16% 0%, rgba(124,58,237,0.11), transparent 70%),
+            #060608;
+          color: #f4f4f5;
+          font-family: 'Segoe UI', system-ui, sans-serif;
+          overflow: hidden;
+        }
+        .chat-panel {
+          width: 440px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border-right: 1px solid rgba(255,255,255,0.14);
+          background: rgba(10,10,14,0.98);
+          flex-shrink: 0;
+        }
+        .chat-header, .preview-header {
+          min-height: 58px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 12px 16px;
+          border-bottom: 1px solid rgba(255,255,255,0.14);
+          background: rgba(16,16,20,0.98);
+        }
+        .chat-header-title {
+          font-size: 15px;
+          font-weight: 800;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 260px;
+          display: block;
+        }
+        .back-btn {
+          min-height: 36px;
+          font-size: 13px;
+          color: #f4f4f5;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 8px;
+          cursor: pointer;
+          padding: 8px 12px;
+          white-space: nowrap;
+          font-weight: 700;
+        }
+        .back-btn:hover { color: #fff; background: rgba(124,58,237,0.18); border-color: rgba(167,139,250,0.42); }
+        .messages-area { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; }
         .message { display: flex; gap: 10px; align-items: flex-start; max-width: 720px; }
         .message.user { flex-direction: row-reverse; margin-left: auto; }
-        .msg-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-        .assistant-avatar { background: linear-gradient(135deg, #7C3AED, #6D28D9); color: #fff; font-weight: 800; }
-        .msg-bubble, .working-bubble { background: rgba(10,10,10,0.96); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px 14px; max-width: 600px; }
-        .message.user .msg-bubble { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3); }
-        .msg-content { font-size: 14px; color: #ddd; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
-        .msg-time { display: block; font-size: 10px; color: #555; margin-top: 6px; text-align: right; }
-        .working-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #e5e5e5; margin-bottom: 6px; }
+        .msg-avatar {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          flex-shrink: 0;
+          border: 1px solid rgba(255,255,255,0.18);
+        }
+        .assistant-avatar { background: #7C3AED; color: #fff; font-weight: 800; box-shadow: 0 0 22px rgba(124,58,237,0.28); }
+        .msg-bubble, .working-bubble {
+          background: rgba(17,17,22,0.98);
+          border: 1px solid rgba(255,255,255,0.16);
+          border-radius: 12px;
+          padding: 12px 14px;
+          max-width: 600px;
+          box-shadow: 0 14px 34px rgba(0,0,0,0.22);
+        }
+        .message.user .msg-bubble { background: rgba(124,58,237,0.22); border-color: rgba(167,139,250,0.38); }
+        .msg-content { font-size: 14px; color: #f1f1f4; white-space: pre-wrap; font-family: inherit; line-height: 1.65; }
+        .msg-time { display: block; font-size: 11px; color: #a1a1aa; margin-top: 8px; text-align: right; }
+        .working-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: #f4f4f5; margin-bottom: 6px; }
         .working-dot { width: 8px; height: 8px; border-radius: 50%; background: #A78BFA; animation: pulse 1s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .working-status, .error-text { font-size: 12px; color: #888; }
+        .working-status, .error-text { font-size: 13px; color: #c4c4cf; }
         .error-text { color: #f87171; }
-        .input-area { padding: 12px 16px 16px; background: #060606; border-top: 1px solid rgba(255,255,255,0.05); }
-        .input-card { background: rgba(10,10,10,0.96); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 12px 14px 10px; }
-        .chat-input { width: 100%; background: transparent; border: none; outline: none; color: #ccc; font-size: 14px; resize: none; line-height: 1.5; min-height: 40px; max-height: 120px; overflow-y: auto; font-family: inherit; }
-        .chat-input::placeholder { color: #444; }
-        .input-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-        .input-left, .input-right, .preview-tabs, .chat-header-right { display: flex; align-items: center; gap: 6px; }
-        .visual-btn, .header-btn { padding: 5px 10px; border-radius: 7px; border: 1px solid #2a2a2a; background: transparent; color: #888; font-size: 12px; cursor: pointer; }
-        .visual-btn:hover, .header-btn:hover { background: #1e1e1e; color: #fff; }
-        .build-badge { font-size: 12px; color: #A78BFA; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); border-radius: 7px; padding: 4px 9px; }
-        .send-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: linear-gradient(135deg, #7C3AED, #6D28D9); color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .send-btn.stop { background: #333; border: 1px solid #444; }
-        .preview-panel { flex: 1; display: flex; flex-direction: column; background: #0A0A0A; overflow: hidden; }
-        .header-btn.active { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3); color: #A78BFA; }
-        .header-btn.publish { background: linear-gradient(135deg, #7C3AED, #6D28D9); border: none; color: #fff; font-weight: 600; }
-        .preview-content { flex: 1; padding: 18px; min-height: 0; }
-        .preview-frame { width: 100%; height: 100%; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: #fff; }
-        .code-view { width: 100%; height: 100%; overflow: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: #050505; color: #d7d7dd; padding: 18px; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; white-space: pre-wrap; }
+        .input-area { padding: 14px 16px 18px; background: rgba(10,10,14,0.98); border-top: 1px solid rgba(255,255,255,0.14); }
+        .input-card {
+          background: rgba(17,17,22,0.98);
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 14px;
+          padding: 14px;
+          box-shadow: 0 18px 48px rgba(0,0,0,0.28);
+        }
+        .input-card:focus-within { border-color: rgba(167,139,250,0.58); box-shadow: 0 0 0 3px rgba(124,58,237,0.16), 0 18px 48px rgba(0,0,0,0.28); }
+        .chat-input { width: 100%; background: transparent; border: none; outline: none; color: #fff; font-size: 15px; resize: none; line-height: 1.6; min-height: 48px; max-height: 140px; overflow-y: auto; font-family: inherit; }
+        .chat-input::placeholder { color: #9ca3af; }
+        .input-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+        .input-left, .input-right, .preview-tabs, .chat-header-right { display: flex; align-items: center; gap: 8px; }
+        .visual-btn, .header-btn {
+          min-height: 36px;
+          padding: 8px 12px;
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(255,255,255,0.08);
+          color: #f4f4f5;
+          font-size: 13px;
+          font-weight: 750;
+          cursor: pointer;
+        }
+        .visual-btn:hover, .header-btn:hover { background: rgba(124,58,237,0.18); border-color: rgba(167,139,250,0.42); color: #fff; }
+        .build-badge { font-size: 12px; color: #EDE9FE; background: rgba(124,58,237,0.22); border: 1px solid rgba(167,139,250,0.4); border-radius: 7px; padding: 6px 10px; font-weight: 800; }
+        .send-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: #7C3AED;
+          color: #fff;
+          font-size: 18px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          box-shadow: 0 0 24px rgba(124,58,237,0.34);
+        }
+        .send-btn:hover { background: #8B5CF6; }
+        .send-btn.stop { background: #2a2a31; border: 1px solid rgba(255,255,255,0.22); box-shadow: none; }
+        .preview-panel { flex: 1; display: flex; flex-direction: column; background: #0A0A0E; overflow: hidden; }
+        .header-btn.active { background: rgba(124,58,237,0.24); border-color: rgba(167,139,250,0.48); color: #F5F3FF; }
+        .header-btn.publish { background: #7C3AED; border-color: rgba(255,255,255,0.14); color: #fff; font-weight: 800; }
+        .preview-content { flex: 1; padding: 20px; min-height: 0; }
+        .preview-frame { width: 100%; height: 100%; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #fff; box-shadow: 0 18px 60px rgba(0,0,0,0.28); }
+        .code-shell { position: relative; width: 100%; height: 100%; min-height: 0; }
+        .copy-code-btn {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 2;
+          min-height: 34px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 8px;
+          background: rgba(17,17,22,0.94);
+          color: #f4f4f5;
+          padding: 7px 11px;
+          font-size: 12px;
+          font-weight: 800;
+          cursor: pointer;
+          box-shadow: 0 12px 32px rgba(0,0,0,0.32);
+          backdrop-filter: blur(14px);
+        }
+        .copy-code-btn:hover { background: rgba(124,58,237,0.22); border-color: rgba(167,139,250,0.46); color: #fff; }
+        .copy-code-btn:disabled { cursor: default; opacity: 0.52; }
+        .code-view { width: 100%; height: 100%; overflow: auto; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: #050505; color: #f1f1f4; padding: 58px 20px 20px; font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; white-space: pre-wrap; }
+        button:focus-visible,
+        textarea:focus-visible {
+          outline: 3px solid rgba(167,139,250,0.42);
+          outline-offset: 2px;
+        }
         @media (max-width: 900px) {
           .chat-root { flex-direction: column; }
-          .chat-panel { width: 100%; height: 45vh; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+          .chat-panel { width: 100%; height: 48vh; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.14); }
           .preview-panel { min-height: 55vh; }
+          .chat-header-title { max-width: 52vw; }
+          .input-actions { align-items: stretch; }
         }
       `}</style>
     </div>

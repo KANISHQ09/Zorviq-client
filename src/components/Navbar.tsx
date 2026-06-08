@@ -334,7 +334,7 @@ function NavLinkItem({ item }: { item: NavItem }) {
             : "translateX(-50%) translateY(-8px)",
           transition:
             "opacity 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1)",
-          zIndex: 200,
+          zIndex: 2200,
           overflow: "hidden",
         }}
       >
@@ -359,12 +359,13 @@ export default function Navbar() {
 
   return (
     <header
+      data-inline-editor-ignore
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 100,
+        zIndex: 1200,
         display: "flex",
         justifyContent: "center",
         padding: scrolled ? "12px 24px" : "0 0",

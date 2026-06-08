@@ -5,11 +5,11 @@ const resources = {
   en: {
     translation: {
       hero: {
-        badge: "Launch websites from a single prompt",
-        title1: "Describe It.",
-        title2: "Build It.",
-        title3: "Ship It.",
-        subheading: "From a single prompt to a live website. ZORVIQ writes the code, generates the content, and deploys — in seconds.",
+        badge: "No-code AI website builder",
+        title1: "AI Website Builder",
+        title2: "From Prompt to Page.",
+        title3: "Launch in Seconds.",
+        subheading: "Create responsive no-code landing pages, portfolios, SaaS sites, and stores with ZORVIQ's AI website generator.",
         cta_primary: "Start Building Free",
         watch_demo: "See it in action",
         trusted: "Trusted by modern builders",
