@@ -1,5 +1,7 @@
 "use client";
+
 import { useState } from "react";
+import Link from "next/link";
 import { Check } from "lucide-react";
 
 const plans = [
@@ -9,44 +11,38 @@ const plans = [
     yearlyPrice: 15,
     desc: "Perfect for hobby projects",
     features: [
-      "Unlimited AI Generations / month",
-      "Custom Domain",
-      "Basic Templates",
-      "Community Support",
+      "Unlimited AI generations",
+      "Custom domain",
+      "Basic templates",
+      "Community support",
     ],
-    cta: "Get Started",
     popular: false,
-    ctaStyle: "outline",
   },
   {
     name: "Pro",
     monthlyPrice: 39,
     yearlyPrice: 29,
-    desc: "For professionals & creators",
+    desc: "For professionals and creators",
     features: [
-      "Unlimited AI Generations",
-      "Advanced AI Features",
-      "Premium Templates",
-      "Priority Support",
+      "Unlimited AI generations",
+      "Advanced AI editing",
+      "Premium templates",
+      "Priority support",
     ],
-    cta: "Get Started",
     popular: true,
-    ctaStyle: "solid",
   },
   {
     name: "Team",
     monthlyPrice: 99,
     yearlyPrice: 79,
-    desc: "For teams & agencies",
+    desc: "For teams and agencies",
     features: [
       "Everything in Pro",
-      "Team Collaboration",
-      "White Label",
-      "Dedicated Support",
+      "Team collaboration",
+      "White-label exports",
+      "Dedicated support",
     ],
-    cta: "Get Started",
     popular: false,
-    ctaStyle: "outline",
   },
 ];
 
@@ -54,168 +50,198 @@ export default function Pricing() {
   const [yearly, setYearly] = useState(false);
 
   return (
-    <section
-      id="pricing"
-      style={{ padding: "120px 24px", position: "relative" }}
-    >
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        {/* Header */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "center", marginBottom: "60px" }} className="pricing-header">
+    <section id="pricing" style={{ padding: "96px 24px", position: "relative", background: "#060608" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <div className="pricing-header">
           <div>
-            <span className="badge" style={{ marginBottom: "16px", display: "inline-flex" }}>
+            <span className="badge" style={{ marginBottom: 16, display: "inline-flex" }}>
               <span className="badge-dot" /> Pricing
             </span>
-            <h2 style={{
-              fontFamily: "'Syne',sans-serif", fontWeight: 900,
-              fontSize: "clamp(2rem,4vw,3rem)", color: "#fff", lineHeight: 1.2,
-            }}>
-              Simple, transparent<br />pricing.
-            </h2>
+            <h2 className="pricing-title">Simple, transparent pricing.</h2>
           </div>
-          {/* Toggle */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <button
-              onClick={() => setYearly(false)}
-              style={{
-                padding: "8px 20px", borderRadius: "8px", border: "none",
-                background: !yearly ? "#fff" : "transparent",
-                color: !yearly ? "#000" : "#555",
-                fontWeight: 600, fontSize: "0.85rem", cursor: "pointer",
-                transition: "all 0.2s",
-              }}
-            >Monthly</button>
-            <button
-              onClick={() => setYearly(true)}
-              style={{
-                padding: "8px 20px", borderRadius: "8px", border: "none",
-                background: yearly ? "#fff" : "transparent",
-                color: yearly ? "#000" : "#555",
-                fontWeight: 600, fontSize: "0.85rem", cursor: "pointer",
-                transition: "all 0.2s",
-              }}
-            >Yearly</button>
-            {yearly && (
-              <span style={{
-                background: "rgba(16,185,129,0.15)",
-                border: "1px solid rgba(16,185,129,0.3)",
-                color: "#10B981",
-                padding: "3px 10px", borderRadius: "9999px",
-                fontSize: "0.72rem", fontWeight: 600,
-              }}>Save 20%</span>
-            )}
+          <div className="billing-toggle" aria-label="Billing cycle">
+            <button type="button" onClick={() => setYearly(false)} className={!yearly ? "active" : ""}>
+              Monthly
+            </button>
+            <button type="button" onClick={() => setYearly(true)} className={yearly ? "active" : ""}>
+              Yearly
+            </button>
+            <span>Save 20%</span>
           </div>
         </div>
 
-        {/* Cards */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: "20px",
-        }} className="pricing-cards">
+        <div className="pricing-cards">
           {plans.map((plan) => (
-            <div
-              key={plan.name}
-              style={{
-                background: plan.popular ? "rgba(124,58,237,0.06)" : "#0D0D0D",
-                border: plan.popular ? "1px solid rgba(124,58,237,0.4)" : "1px solid rgba(255,255,255,0.06)",
-                borderRadius: "20px",
-                padding: "32px",
-                position: "relative",
-                transition: "all 0.3s",
-                transform: plan.popular ? "scale(1.02)" : "scale(1)",
-                boxShadow: plan.popular ? "0 0 40px rgba(124,58,237,0.12)" : "none",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = plan.popular ? "scale(1.02) translateY(-4px)" : "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = plan.popular ? "scale(1.02)" : "scale(1)";
-              }}
-            >
-              {plan.popular && (
-                <div style={{
-                  position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)",
-                  background: "linear-gradient(135deg,#7C3AED,#6366F1)",
-                  color: "#fff", padding: "4px 16px", borderRadius: "9999px",
-                  fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.05em",
-                  whiteSpace: "nowrap",
-                  boxShadow: "0 0 20px rgba(124,58,237,0.5)",
-                }}>Most Popular</div>
-              )}
-
-              <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "#fff", marginBottom: "6px" }}>
-                {plan.name}
-              </h3>
-              <p style={{ fontSize: "0.8rem", color: "#555", marginBottom: "24px" }}>{plan.desc}</p>
-
-              {/* Price */}
-              <div style={{ marginBottom: "28px" }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
-                  <span style={{ fontSize: "1rem", color: "#888", fontWeight: 500 }}>$</span>
-                  <span style={{
-                    fontFamily: "'Syne',sans-serif", fontWeight: 900,
-                    fontSize: "3rem", color: "#fff",
-                  }}>
-                    {yearly ? plan.yearlyPrice : plan.monthlyPrice}
-                  </span>
-                  <span style={{ fontSize: "0.85rem", color: "#555" }}>/month</span>
-                </div>
+            <article key={plan.name} className={plan.popular ? "pricing-card popular" : "pricing-card"}>
+              {plan.popular && <div className="popular-badge">Most popular</div>}
+              <h3>{plan.name}</h3>
+              <p>{plan.desc}</p>
+              <div className="price-row">
+                <span>$</span>
+                <strong>{yearly ? plan.yearlyPrice : plan.monthlyPrice}</strong>
+                <span>/month</span>
               </div>
-
-              {/* Features */}
-              <div style={{ marginBottom: "32px" }}>
-                {plan.features.map((f) => (
-                  <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "12px" }}>
-                    <div style={{
-                      width: "18px", height: "18px", borderRadius: "50%", flexShrink: 0, marginTop: "1px",
-                      background: "rgba(124,58,237,0.15)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <Check size={10} style={{ color: "#A78BFA" }} />
-                    </div>
-                    <span style={{ fontSize: "0.82rem", color: "#888" }}>{f}</span>
+              <div className="feature-list">
+                {plan.features.map((feature) => (
+                  <div key={feature}>
+                    <span>
+                      <Check size={12} />
+                    </span>
+                    {feature}
                   </div>
                 ))}
               </div>
-
-              {/* CTA */}
-              <button
-                style={{
-                  width: "100%",
-                  padding: "13px",
-                  borderRadius: "10px",
-                  border: plan.popular ? "none" : "1px solid rgba(255,255,255,0.1)",
-                  background: plan.popular ? "linear-gradient(135deg,#7C3AED,#6366F1)" : "transparent",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "0.9rem",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  boxShadow: plan.popular ? "0 0 20px rgba(124,58,237,0.3)" : "none",
-                }}
-                onMouseEnter={(e) => {
-                  if (!plan.popular) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
-                  else (e.currentTarget as HTMLElement).style.boxShadow = "0 0 36px rgba(124,58,237,0.6)";
-                }}
-                onMouseLeave={(e) => {
-                  if (!plan.popular) (e.currentTarget as HTMLElement).style.background = "transparent";
-                  else (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(124,58,237,0.3)";
-                }}
-              >
-                {plan.cta}
-              </button>
-            </div>
+              <Link href="/signup" className={plan.popular ? "plan-cta solid" : "plan-cta"}>
+                Get started
+              </Link>
+            </article>
           ))}
         </div>
       </div>
+
       <style>{`
-        @media (max-width: 900px) {
-          .pricing-cards { grid-template-columns: 1fr !important; }
-          .pricing-header { grid-template-columns: 1fr !important; gap: 20px !important; }
+        .pricing-header {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 28px;
+          align-items: end;
+          margin-bottom: 40px;
         }
-        @media (max-width: 600px) {
-          #pricing { padding: 60px 16px !important; }
-          .pricing-cards > div { padding: 24px !important; }
+        .pricing-title {
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(2rem, 4vw, 3.2rem);
+          line-height: 1.05;
+          color: #fff;
+          font-weight: 900;
+          max-width: 620px;
+        }
+        .billing-toggle {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 10px;
+          background: rgba(255,255,255,0.04);
+        }
+        .billing-toggle button {
+          border: 0;
+          border-radius: 7px;
+          padding: 8px 14px;
+          background: transparent;
+          color: #9ca3af;
+          cursor: pointer;
+          font-weight: 700;
+        }
+        .billing-toggle button.active {
+          background: #fff;
+          color: #050505;
+        }
+        .billing-toggle span {
+          color: #34d399;
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding-inline: 8px;
+        }
+        .pricing-cards {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 18px;
+        }
+        .pricing-card {
+          position: relative;
+          border: 1px solid rgba(255,255,255,0.09);
+          border-radius: 8px;
+          padding: 28px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+          box-shadow: 0 20px 70px rgba(0,0,0,0.24);
+        }
+        .pricing-card.popular {
+          border-color: rgba(124,58,237,0.52);
+          background: linear-gradient(180deg, rgba(124,58,237,0.16), rgba(255,255,255,0.026));
+        }
+        .popular-badge {
+          position: absolute;
+          top: -12px;
+          left: 24px;
+          border-radius: 999px;
+          padding: 5px 12px;
+          background: linear-gradient(135deg, #7c3aed, #4f46e5);
+          color: #fff;
+          font-size: 0.72rem;
+          font-weight: 800;
+        }
+        .pricing-card h3 {
+          color: #fff;
+          font-size: 1.1rem;
+          margin: 0 0 6px;
+        }
+        .pricing-card p {
+          color: #a1a1aa;
+          margin: 0 0 24px;
+          font-size: 0.9rem;
+        }
+        .price-row {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          margin-bottom: 24px;
+        }
+        .price-row strong {
+          color: #fff;
+          font-size: 3rem;
+          line-height: 1;
+          font-family: 'Syne', sans-serif;
+        }
+        .price-row span {
+          color: #a1a1aa;
+          font-weight: 700;
+        }
+        .feature-list {
+          display: grid;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+        .feature-list div {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #d4d4d8;
+          font-size: 0.9rem;
+        }
+        .feature-list span {
+          width: 20px;
+          height: 20px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          color: #c4b5fd;
+          background: rgba(124,58,237,0.18);
+        }
+        .plan-cta {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 8px;
+          padding: 12px;
+          color: #fff;
+          text-decoration: none;
+          font-weight: 800;
+          background: rgba(255,255,255,0.04);
+        }
+        .plan-cta.solid {
+          border: 0;
+          background: linear-gradient(135deg, #7c3aed, #4f46e5);
+        }
+        @media (max-width: 900px) {
+          .pricing-header { grid-template-columns: 1fr; align-items: start; }
+          .pricing-cards { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 560px) {
+          #pricing { padding: 64px 16px !important; }
+          .billing-toggle { width: 100%; flex-wrap: wrap; }
+          .billing-toggle button { flex: 1; }
         }
       `}</style>
     </section>

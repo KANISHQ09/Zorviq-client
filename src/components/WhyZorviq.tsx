@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { Search, Globe, Copy, Clock, CheckCircle2, ArrowRight } from "lucide-react";
+import { Search, Globe, Copy, Clock, CheckCircle2 } from "lucide-react";
 
 export default function WhyZorviq() {
   return (

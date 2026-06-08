@@ -1,38 +1,24 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Layers, Zap, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 
 
 /* ── Template data ─────────────────────────────────── */
 const TEMPLATES = [
-  { id: "forma", name: "Forma Interiors", category: "Furniture", filter: "Ecommerce", accent: "#D4A373", rgb: "212,163,115", img: "/templates/img1.jpg" },
-  { id: "acentic", name: "Acentic AI", category: "Software", filter: "AI", accent: "#8B5CF6", rgb: "139,92,246", img: "/templates/img2.jpg" },
-  { id: "iron", name: "IRON Dashboard", category: "Analytics", filter: "SaaS", accent: "#A3E635", rgb: "163,230,53", img: "/templates/img3.jpg" },
-  { id: "destin", name: "Destin Adventures", category: "Travel", filter: "Agency", accent: "#10B981", rgb: "16,185,129", img: "/templates/img4.jpg" },
-  { id: "gigi", name: "GiGi Energy", category: "FMCG", filter: "Ecommerce", accent: "#84CC16", rgb: "132,204,22", img: "/templates/img5.jpg" },
-  { id: "saas", name: "SaaS Landing", category: "Software", filter: "SaaS", accent: "#7C3AED", rgb: "124,58,237", img: "/templates/img6.png" },
-];
-
-const FILTERS = ["All", "SaaS", "Portfolio", "Agency", "AI", "Ecommerce"] as const;
-
-
-
-const METRICS = [
-  { icon: Layers, label: "Templates", value: "47+" },
-  { icon: Zap, label: "Deployed today", value: "1,240" },
-  { icon: Users, label: "Builders using Zorviq", value: "8,300+" },
+  { id: "forma", name: "Forma Interiors", category: "Furniture", img: "/templates/img1.jpg" },
+  { id: "acentic", name: "Acentic AI", category: "Software", img: "/templates/img2.jpg" },
+  { id: "iron", name: "IRON Dashboard", category: "Analytics", img: "/templates/img3.jpg" },
+  { id: "destin", name: "Destin Adventures", category: "Travel", img: "/templates/img4.jpg" },
+  { id: "gigi", name: "GiGi Energy", category: "FMCG", img: "/templates/img5.jpg" },
+  { id: "saas", name: "SaaS Landing", category: "Software", img: "/templates/img6.png" },
 ];
 
 /* ── Section ───────────────────────────────────────── */
 export default function Templates() {
   const [hovered, setHovered] = useState<string | null>(null);
-  const [activeFilter, setActiveFilter] = useState<string>("All");
-
-  const visible = activeFilter === "All"
-    ? TEMPLATES
-    : TEMPLATES.filter(t => t.filter === activeFilter);
 
   return (
     <section
@@ -83,7 +69,7 @@ export default function Templates() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}>
-              stunning templates.
+              AI website templates.
             </span>
           </h2>
           <p style={{
@@ -94,7 +80,7 @@ export default function Templates() {
             margin: "0 auto 20px",
             lineHeight: 1.68,
           }}>
-            Production-ready starting points — fully customizable by AI, deployed in seconds.
+            Production-ready no-code website templates for landing pages, portfolios, SaaS pages, and online stores.
           </p>
 
         </div>
@@ -110,7 +96,7 @@ export default function Templates() {
           gridAutoRows: "1fr",
           gap: 20,
         }}>
-          {visible.map(({ id, name, category, accent, rgb, img }) => {
+          {TEMPLATES.map(({ id, name, category, img }) => {
             const on = hovered === id;
             return (
               <div
@@ -138,7 +124,14 @@ export default function Templates() {
                 {/* Preview */}
                 <div style={{ height: 164, overflow: "hidden", position: "relative", flexShrink: 0 }}>
                   {img && (
-                    <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image
+                      src={img}
+                      alt={`${name} AI website template preview`}
+                      width={1024}
+                      height={682}
+                      sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
                   )}
                   {/* Bottom vignette */}
                   <div style={{
@@ -212,7 +205,7 @@ export default function Templates() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
-          <button style={{
+          <Link href="/signup" style={{
             background: "rgba(255,255,255,0.05)",
             border: "1px solid rgba(255,255,255,0.1)",
             color: "#FFFFFF",
@@ -221,13 +214,14 @@ export default function Templates() {
             fontSize: "0.875rem",
             fontWeight: 500,
             cursor: "pointer",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
+            textDecoration: "none",
           }}
           onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
           onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
           >
-            View all
-          </button>
+            Browse AI website templates
+          </Link>
         </div>
       </div>
 

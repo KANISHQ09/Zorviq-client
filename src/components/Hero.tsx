@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Check } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import WebsiteShowcase from "@/components/WebsiteShowcase";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from "react";
@@ -15,14 +15,6 @@ const PROMPTS = [
   "E-commerce store for ceramics",
 ];
 
-const GEN_STEPS = [
-  { label: "Understanding prompt" },
-  { label: "Creating layout" },
-  { label: "Writing content" },
-  { label: "Generating assets" },
-  { label: "Ready to deploy" },
-];
-
 export default function Hero() {
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -33,8 +25,6 @@ export default function Hero() {
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
   const [inputVal, setInputVal] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [genStep, setGenStep] = useState(-1);
 
   const [promptHover, setPromptHover] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -420,91 +410,6 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── AI Generation progress ── */}
-          {isGenerating && (
-            <div style={{
-              marginTop: "36px",
-              background: "rgba(124,58,237,0.03)",
-              border: "1px solid rgba(124,58,237,0.09)",
-              borderRadius: "12px",
-              padding: "18px 22px",
-              maxWidth: "320px",
-              animation: "fadeInUp 0.4s cubic-bezier(0.16,1,0.3,1) both",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-            }}>
-              <div style={{
-                display: "flex", alignItems: "center", gap: "8px",
-                marginBottom: "16px", paddingBottom: "12px",
-                borderBottom: "1px solid rgba(124,58,237,0.07)",
-              }}>
-                <div style={{
-                  width: "5px", height: "5px", borderRadius: "50%",
-                  background: "#A78BFA",
-                  boxShadow: "0 0 10px rgba(167,139,250,0.6)",
-                  animation: "subtlePulse 2s ease-in-out infinite",
-                }} />
-                <span style={{
-                  fontSize: "0.62rem",
-                  color: "rgba(167,139,250,0.75)",
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontWeight: 500,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase" as const,
-                }}>
-                  Generating
-                </span>
-              </div>
-
-              {GEN_STEPS.map((step, i) => (
-                <div key={step.label} style={{
-                  display: "flex", alignItems: "center", gap: "10px",
-                  padding: "5px 0",
-                  opacity: i <= genStep ? 1 : 0.12,
-                  transition: "opacity 0.5s ease",
-                }}>
-                  <span style={{
-                    width: "16px", height: "16px",
-                    borderRadius: "50%",
-                    background: i < genStep
-                      ? "rgba(124,58,237,0.85)"
-                      : i === genStep
-                        ? "rgba(124,58,237,0.10)"
-                        : "rgba(255,255,255,0.02)",
-                    border: i === genStep
-                      ? "1px solid rgba(124,58,237,0.45)"
-                      : i < genStep
-                        ? "1px solid transparent"
-                        : "1px solid rgba(255,255,255,0.04)",
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0,
-                    transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
-                  }}>
-                    {i < genStep && <Check size={9} color="#fff" strokeWidth={2.5} />}
-                    {i === genStep && (
-                      <span style={{
-                        width: "5px", height: "5px", borderRadius: "50%",
-                        background: "#A78BFA",
-                        animation: "subtlePulse 1.2s ease-in-out infinite",
-                        display: "block",
-                      }} />
-                    )}
-                  </span>
-                  <span style={{
-                    fontSize: "0.72rem",
-                    color: i <= genStep ? "rgba(255,255,255,0.52)" : "rgba(255,255,255,0.10)",
-                    fontFamily: "'Inter', sans-serif",
-                    transition: "color 0.5s ease",
-                    fontWeight: i === genStep ? 500 : 400,
-                    letterSpacing: "0.005em",
-                  }}>
-                    {step.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* ── Right: Website Showcase ── */}
