@@ -12,11 +12,16 @@ export const generationService = {
     }>("/api/generate", { projectId, prompt, ...opts });
   },
   status(jobId: string) {
-    return apiClient.get<{ status: string; output?: string | null }>(
+    return apiClient.get<{ status: string; output?: string | null; tokenCount?: number | null }>(
       `/api/generate/status/${jobId}`,
     );
   },
   streamUrl(jobId: string) {
     return `${API_BASE_URL}/api/generate/stream/${jobId}`;
+  },
+  history(projectId: string, limit = 20) {
+    return apiClient.get<{ success: boolean; data: any[] }>(
+      `/api/generate/history/${projectId}?limit=${limit}`,
+    );
   },
 };
