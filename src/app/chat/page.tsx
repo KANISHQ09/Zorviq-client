@@ -843,6 +843,57 @@ function ChatContent({ queryProjectId }: { queryProjectId: string | null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
+  useEffect(() => {
+    if (!projectId) return;
+
+    const loadHistory = async () => {
+      try {
+        const historyItems = await generationService.history(projectId);
+        if (Array.isArray(historyItems)) {
+          const formattedMessages: Message[] = [];
+
+          // historyItems is sorted newest first in backend, reverse to show oldest first
+          [...historyItems].reverse().forEach((item: any) => {
+            const formattedTime = item.createdAt
+              ? new Date(item.createdAt).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : now();
+
+            const userContent = item.isSectionEdit && item.sectionId
+              ? `[Section Edit: ${item.sectionId}] ${item.prompt}`
+              : item.prompt;
+
+            formattedMessages.push({
+              id: `${item._id}-user`,
+              role: "user",
+              content: userContent,
+              time: formattedTime,
+            });
+
+            formattedMessages.push({
+              id: `${item._id}-assistant`,
+              role: "assistant",
+              content: item.output
+                ? "Generated the project. Use Watch Preview to inspect it or Watch Code to review the source."
+                : item.errorMessage || "Generation failed.",
+              time: formattedTime,
+            });
+          });
+
+          if (formattedMessages.length > 0) {
+            setMessages(formattedMessages);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load project generation history:", err);
+      }
+    };
+
+    void loadHistory();
+  }, [projectId]);
+
   const stopGeneration = () => {
     streamRef.current?.close();
     setIsWorking(false);

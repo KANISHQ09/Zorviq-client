@@ -19,4 +19,9 @@ export const generationService = {
   streamUrl(jobId: string) {
     return `${API_BASE_URL}/api/generate/stream/${jobId}`;
   },
+  history(projectId: string, limit = 20) {
+    return apiClient.get<{ success: boolean; data: any[] }>(
+      `/api/generate/history/${projectId}?limit=${limit}`,
+    );
+  },
 };
